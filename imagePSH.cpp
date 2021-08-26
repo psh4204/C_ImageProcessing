@@ -377,8 +377,8 @@ void mdLightImage() {
     m_outW = m_inW;
     m_OutImage = malloc2D(m_outH, m_outW);
     int input = 0;
-    printf("(1)°ö¼À (2) ³ª´°¼À :"); scanf("%d", &input);
-    if (input == 1) {
+    printf("(1)°ö¼À (2) ³ª´°¼À\n"); input = _getch();
+    if (input == '1') {
         printf("¿øÇÏ´Â ¹à±âÁ¶Àý·® :"); scanf("%d", &input);
         for (int i = 0; i < m_inH; i++) {
             for (int k = 0; k < m_inW; k++) {
@@ -388,7 +388,7 @@ void mdLightImage() {
             }
         }
     }
-    if (input == 2) {
+    if (input == '2') {
         printf("¿øÇÏ´Â ¹à±âÁ¶Àý·® :"); scanf("%d", &input);
         for (int i = 0; i < m_inH; i++) {
             for (int k = 0; k < m_inW; k++) {
