@@ -1,4 +1,4 @@
-#define   _CRT_SECURE_NO_WARNINGS
+ï»¿#define _CRT_SECURE_NO_WARNINGS
 #define _USE_MATH_DEFINES
 #include <stdio.h>
 #include <stdlib.h>
@@ -8,30 +8,30 @@
 #include <conio.h>
 #include <Windows.h>
 /* =======================================================================
-   ÀÌ¸§ : ¹Ì´ÏÇÁ·ÎÁ§Æ®_ImageProcessing
-   ¹öÀü :1.0
-   ±â´É
-   -±âº»±â´É
-     -ÆÄÀÏ¿­±â, ÀúÀå, Á¾·á
-   -¿µ»óÃ³¸®±â´É
-    - È­¼ÒÁ¡Ã³¸®, ±âÇÏÇĞÃ³¸®, È­¼Ò¿µ¿ªÃ³¸®, È÷½ºÅä±×·¥Ã³¸®
+   ì´ë¦„ : ë¯¸ë‹ˆí”„ë¡œì íŠ¸_ImageProcessing
+   ë²„ì „ :1.0
+   ê¸°ëŠ¥
+   -ê¸°ë³¸ê¸°ëŠ¥
+     -íŒŒì¼ì—´ê¸°, ì €ì¥, ì¢…ë£Œ
+   -ì˜ìƒì²˜ë¦¬ê¸°ëŠ¥
+    - í™”ì†Œì ì²˜ë¦¬, ê¸°í•˜í•™ì²˜ë¦¬, í™”ì†Œì˜ì—­ì²˜ë¦¬, íˆìŠ¤í† ê·¸ë¨ì²˜ë¦¬
    ======================================================================= */
 
-   // Àü¿ªº¯¼öºÎ
+   // ì „ì—­ë³€ìˆ˜ë¶€
 #define UC unsigned char
 HWND hwnd;  HDC hdc;
-UC** m_InImage = NULL;     // Input_Image : ÀÔ·Â ÀÌ¹ÌÁö(ÀÌ¹ÌÁöÃÊ±â°ª)
-UC** m_OutImage = NULL;     // Output_Image : Ãâ·Â ÀÌ¹ÌÁö
-int m_inH, m_inW, m_outH, m_outW; // ÀÌ¹ÌÁö ³ôÀÌ, ³Êºñ
+UC** m_InImage = NULL;     // Input_Image : ì…ë ¥ ì´ë¯¸ì§€(ì´ë¯¸ì§€ì´ˆê¸°ê°’)
+UC** m_OutImage = NULL;     // Output_Image : ì¶œë ¥ ì´ë¯¸ì§€
+int m_inH, m_inW, m_outH, m_outW; // ì´ë¯¸ì§€ ë†’ì´, ë„ˆë¹„
 int menuInput = 0;
-float version = 1.0; // ¹öÀü ÀÔ·Â
+float version = 1.0; // ë²„ì „ ì…ë ¥
 
-// ÇÔ¼ö ¼±¾ğºÎ (°øÅë)
+// í•¨ìˆ˜ ì„ ì–¸ë¶€ (ê³µí†µ)
 UC** malloc2D(int, int);    void free2D(UC**, int);
 void openImage();           void saveImage();
 void displayImage();
 
-// ÇÔ¼ö ¼±¾ğºÎ (¿µ»óÃ³¸®)
+// í•¨ìˆ˜ ì„ ì–¸ë¶€ (ì˜ìƒì²˜ë¦¬)
 void equalImage();
 void pmLightImage();        void mdLightImage();
 void andCircleImage();      void orCircleImage();
@@ -68,61 +68,61 @@ void printMenu() {
     else if (menuInput < 0) {
         menuInput = endPage;
     }
-    printf(" \n   ImageProcessing(Version %.1f)_¹Ú½ÃÈ¯\n", version);
+    printf(" \n   ImageProcessing(Version %.1f)_ë°•ì‹œí™˜\n", version);
     puts("-------------------------------------------------\n");
-    puts("   [0.ÀÌ¹ÌÁö¿­±â] [1.ÀúÀå] [2.¿øº»] [3.Á¾·á]\n");
-    printf("---------------------[%d / %d]----------------------\n", menuInput+1, endPage+1);
+    puts("   [0.ì´ë¯¸ì§€ì—´ê¸°] [1.ì €ì¥] [2.ì›ë³¸] [3.ì¢…ë£Œ]\n");
+    printf("---------------------[%d / %d]----------------------\n", menuInput + 1, endPage + 1);
     switch (menuInput) {
     case 0:
-        puts("   [È­¼ÒÁ¡Ã³¸®]\n");
-        puts("(A.Èæ¹é)\t(B.Æò±ÕÈæ¹é)\n");
-        puts("(C.+-¹à±â)\t(D.*/¹à±â)\n");
-        puts("(E.AND¿ø)\t(F.OR¿ø)\n");
-        puts("(G.¹İÀü)\t(H.°¨¸¶)\n");
-        puts("(I.ÆÄ¶óº¼¶ó)\n");
+        puts("   [í™”ì†Œì ì²˜ë¦¬]\n");
+        puts("(A.í‘ë°±)\t(B.í‰ê· í‘ë°±)\n");
+        puts("(C.+-ë°ê¸°)\t(D.*/ë°ê¸°)\n");
+        puts("(E.ANDì›)\t(F.ORì›)\n");
+        puts("(G.ë°˜ì „)\t(H.ê°ë§ˆ)\n");
+        puts("(I.íŒŒë¼ë³¼ë¼)\n");
         break;
     case 1:
-        puts("   [±âÇÏÇĞÃ³¸®]\n");
-        puts("(A.Ãà¼Ò)\t(B.È®´ë)\n");
-        puts("(C.¹é¿öµùÈ®´ë)\t(D.ÀÌµ¿)\n");
-        puts("(E.ÁÂ¿ì¹Ì·¯¸µ)\t(F.»óÇÏ¹Ì·¯¸µ)\n");
-        puts("(G.È¸Àü)\t(H.Áß¾Ó¹é¿öµùÈ¸Àü)\n");
-        puts("\n[¾ç¼±Çüº¸°£¹ı]\n");
-        puts("(I.È¸Àü)\t(J.È®´ë)\n");
+        puts("   [ê¸°í•˜í•™ì²˜ë¦¬]\n");
+        puts("(A.ì¶•ì†Œ)\t(B.í™•ëŒ€)\n");
+        puts("(C.ë°±ì›Œë”©í™•ëŒ€)\t(D.ì´ë™)\n");
+        puts("(E.ì¢Œìš°ë¯¸ëŸ¬ë§)\t(F.ìƒí•˜ë¯¸ëŸ¬ë§)\n");
+        puts("(G.íšŒì „)\t(H.ì¤‘ì•™ë°±ì›Œë”©íšŒì „)\n");
+        puts("\n[ì–‘ì„ í˜•ë³´ê°„ë²•]\n");
+        puts("(I.íšŒì „)\t(J.í™•ëŒ€)\n");
         break;
     case 2:
-        puts("   [È­¼Ò¿µ¿ªÃ³¸®]\n");
-        puts("(A.¿¥º¸½Ì)\n");
-        puts("(B.3x3ºí·¯)\t(C.5x5ºí·¯)\n");
-        puts("(D.ÀÔ·ÂÆò±Õºí·¯)\t(E.°¡¿ì½Ã¾Èºí·¯)\n");
-        puts("(F.°íÁÖÆÄÅë°ú»şÇÁ´×1)\t(G.°íÁÖÆÄÅë°ú»şÇÁ´×2)\n");
-        puts("(H.°íÁÖÆÄÇÊÅÍ»şÇÁ´×)\t\n");
+        puts("   [í™”ì†Œì˜ì—­ì²˜ë¦¬]\n");
+        puts("(A.ì— ë³´ì‹±)\n");
+        puts("(B.3x3ë¸”ëŸ¬)\t(C.5x5ë¸”ëŸ¬)\n");
+        puts("(D.ì…ë ¥í‰ê· ë¸”ëŸ¬)\t(E.ê°€ìš°ì‹œì•ˆë¸”ëŸ¬)\n");
+        puts("(F.ê³ ì£¼íŒŒí†µê³¼ìƒ¤í”„ë‹1)\t(G.ê³ ì£¼íŒŒí†µê³¼ìƒ¤í”„ë‹2)\n");
+        puts("(H.ê³ ì£¼íŒŒí•„í„°ìƒ¤í”„ë‹)\t\n");
         break;
     case 3:
-        puts("   [È­¼Ò¿µ¿ªÃ³¸®(¿§ÁöÃ³¸®)]\n");
-        puts("(A.¼öÆò¿§Áö)\t(B.¼öÁ÷¿§Áö)\n");
-        puts("\n[1Â÷ ¹ÌºĞ È¸¼± ¸¶½ºÅ©]\n");
-        puts("[·Î¹öÃ÷¿§Áö]\t(C.¼öÆò) (D.Á÷Æò) (E.¼öÁ÷¼öÆò)\n");
-        puts("[ÇÁ¸®À­¿§Áö]\t(F.¼öÆò) (G.Á÷Æò) (H.¼öÁ÷¼öÆò)\n");
-        puts("[¼Òº§¿§Áö]]\t(I.¼öÆò) (J.Á÷Æò) (K.¼öÁ÷¼öÆò)\n");
-        puts("\n[2Â÷ ¹ÌºĞ È¸¼± ¸¶½ºÅ©]\n");
-        puts("[¶óÇÃ¶ó¿§Áö]]\t(L.4)\t(M.-8)\t(N.8)\n");
-        puts("(O.LOG¿¬»ê)\t(V.DoG¿¬»ê)\n");
-        puts("\n[¿¬»êÀÚ]\n");
-        puts("(Q.À¯»ç¿¬»êÀÚ)\t(R.Â÷¿¬»êÀÚ)\n");
+        puts("   [í™”ì†Œì˜ì—­ì²˜ë¦¬(ì—£ì§€ì²˜ë¦¬)]\n");
+        puts("(A.ìˆ˜í‰ì—£ì§€)\t(B.ìˆ˜ì§ì—£ì§€)\n");
+        puts("\n[1ì°¨ ë¯¸ë¶„ íšŒì„  ë§ˆìŠ¤í¬]\n");
+        puts("[ë¡œë²„ì¸ ì—£ì§€]\t(C.ìˆ˜í‰) (D.ìˆ˜ì§) (E.ìˆ˜ì§ìˆ˜í‰)\n");
+        puts("[í”„ë¦¬ìœ—ì—£ì§€]\t(F.ìˆ˜í‰) (G.ìˆ˜ì§) (H.ìˆ˜ì§ìˆ˜í‰)\n");
+        puts("[ì†Œë²¨ì—£ì§€]]\t(I.ìˆ˜í‰) (J.ìˆ˜ì§) (K.ìˆ˜ì§ìˆ˜í‰)\n");
+        puts("\n[2ì°¨ ë¯¸ë¶„ íšŒì„  ë§ˆìŠ¤í¬]\n");
+        puts("[ë¼í”Œë¼ì—£ì§€]]\t(L.4)\t(M.-8)\t(N.8)\n");
+        puts("(O.LOGì—°ì‚°)\t(V.DoGì—°ì‚°)\n");
+        puts("\n[ì—°ì‚°ì]\n");
+        puts("(Q.ìœ ì‚¬ì—°ì‚°ì)\t(R.ì°¨ì—°ì‚°ì)\n");
         break;
     case 4:
-        puts("   [È÷½ºÅä±×·¥Ã³¸®]\n");
-        puts("(A.È÷½ºÅä±×·¥Ç¥½Ã)\n");
-        puts("(B.½ºÆ®·¹Äª)\t(C.ÆòÈ°È­)\n");
+        puts("   [íˆìŠ¤í† ê·¸ë¨ì²˜ë¦¬]\n");
+        puts("(A.íˆìŠ¤í† ê·¸ë¨í‘œì‹œ)\n");
+        puts("(B.ìŠ¤íŠ¸ë ˆì¹­)\t(C.í‰í™œí™”)\n");
         break;
     }
     puts("-------------------------------------------------\n");
-    puts(" >.´ÙÀ½ ¸Ş´º\n");
-    
+    puts(" >.ë‹¤ìŒ ë©”ë‰´\n");
+
 }
 
-// ¸ŞÀÎÇÔ¼ö
+// ë©”ì¸í•¨ìˆ˜
 int main() {
     hwnd = GetForegroundWindow();
     hdc = GetWindowDC(hwnd);
@@ -151,7 +151,7 @@ int main() {
             case 'i': case'I': paraImage(); break;
 
             default:
-                if (input != 'x' && input != 'X') printf("-> ¿Ã¹Ù¸¥ °ªÀ» ÀÔ·ÂÇÏ¼¼¿ä.\n"); break;
+                if (input != 'x' && input != 'X') printf("-> ì˜¬ë°”ë¥¸ ê°’ì„ ì…ë ¥í•˜ì„¸ìš”.\n"); break;
             }
         }
         else if (menuInput == 1) {
@@ -175,7 +175,7 @@ int main() {
             case 'j': case'J': zoomInYSImage(); break;
 
             default:
-                if (input != 'x' && input != 'X') printf("-> ¿Ã¹Ù¸¥ °ªÀ» ÀÔ·ÂÇÏ¼¼¿ä.\n"); break;
+                if (input != 'x' && input != 'X') printf("-> ì˜¬ë°”ë¥¸ ê°’ì„ ì…ë ¥í•˜ì„¸ìš”.\n"); break;
             }
         }
         else if (menuInput == 2) {
@@ -197,7 +197,7 @@ int main() {
             case 'h': case'H': hfSharpImage(); break;
 
             default:
-                if (input != 'x' && input != 'X') printf("-> ¿Ã¹Ù¸¥ °ªÀ» ÀÔ·ÂÇÏ¼¼¿ä.\n"); break;
+                if (input != 'x' && input != 'X') printf("-> ì˜¬ë°”ë¥¸ ê°’ì„ ì…ë ¥í•˜ì„¸ìš”.\n"); break;
             }
 
         }
@@ -231,7 +231,7 @@ int main() {
 
 
             default:
-                if (input != 'x' && input != 'X') printf("-> ¿Ã¹Ù¸¥ °ªÀ» ÀÔ·ÂÇÏ¼¼¿ä.\n"); break;
+                if (input != 'x' && input != 'X') printf("-> ì˜¬ë°”ë¥¸ ê°’ì„ ì…ë ¥í•˜ì„¸ìš”.\n"); break;
             }
 
         }
@@ -250,26 +250,26 @@ int main() {
 
 
             default:
-                if (input != 'x' && input != 'X') printf("-> ¿Ã¹Ù¸¥ °ªÀ» ÀÔ·ÂÇÏ¼¼¿ä.\n"); break;
+                if (input != 'x' && input != 'X') printf("-> ì˜¬ë°”ë¥¸ ê°’ì„ ì…ë ¥í•˜ì„¸ìš”.\n"); break;
             }
 
         }
     }
     system("cls");
-    printf("Á¾·áµÇ¾ú½À´Ï´Ù.\n");
+    printf("ì¢…ë£Œë˜ì—ˆìŠµë‹ˆë‹¤.\n");
     free2D(m_InImage, m_inH); free2D(m_OutImage, m_outH);
     return 0;
 }
 
-/// ÇÔ¼ö Á¤ÀÇºÎ (°øÅëÇÔ¼ö)
-// ¸Ş¸ğ¸® °ü·ÃÇÔ¼ö
+/// í•¨ìˆ˜ ì •ì˜ë¶€ (ê³µí†µí•¨ìˆ˜)
+// ë©”ëª¨ë¦¬ ê´€ë ¨í•¨ìˆ˜
 UC** malloc2D(int  h, int w) {
     UC** mem;
     mem = (UC**)malloc(h * sizeof(UC*));
     for (int i = 0; i < h; i++)
         mem[i] = (UC*)malloc(w * sizeof(UC));
 
-    // ÃÊ±âÈ­(Clear)
+    // ì´ˆê¸°í™”(Clear)
     for (int i = 0; i < h; i++) {
         for (int k = 0; k < w; k++) {
             mem[i][k] = 0;
@@ -284,16 +284,16 @@ void free2D(UC** memory, int h) {
         free(memory);
     }
 }
-// - ÀÌ¹ÌÁö ¿­±â
+// - ì´ë¯¸ì§€ ì—´ê¸°
 void openImage() {
     char input[50];
     char routeName[100] = "c:/images/meRAW/";
-    printf("¿­¾îº¼ ÆÄÀÏ ¸í -> "); scanf("%s", &input);
+    printf("ì—´ì–´ë³¼ íŒŒì¼ ëª… -> "); scanf("%s", &input);
     strcat(routeName, input); strcat(routeName, ".raw");
     FILE* file = fopen(routeName, "rb");
     if (file == NULL) return;
 
-    //±âÁ¸ ÀÔ·Â ¸Ş¸ğ¸® ÇØÁ¦
+    //ê¸°ì¡´ ì…ë ¥ ë©”ëª¨ë¦¬ í•´ì œ
     free2D(m_InImage, m_inH);
     fseek(file, 0L, SEEK_END);
     unsigned long size = ftell(file);
@@ -301,27 +301,27 @@ void openImage() {
 
     m_inH = m_inW = (int)sqrt(size);
     m_InImage = malloc2D(m_inH, m_inW);
-    printf("[%s][%dx%d]°æ·Î ÆÄÀÏÀ» ¿©´Â Áß ..\n", routeName, m_inH, m_inW);
+    printf("[%s][%dx%d]ê²½ë¡œ íŒŒì¼ì„ ì—¬ëŠ” ì¤‘ ..\n", routeName, m_inH, m_inW);
     file = fopen(routeName, "rb");
     for (int i = 0; i < m_inH; i++)
         fread(m_InImage[i], sizeof(UC), m_inW, file);
     fclose(file);
     equalImage();
 }
-// - ÀÌ¹ÌÁö ÀúÀå
+// - ì´ë¯¸ì§€ ì €ì¥
 void saveImage() {
     char input[50];
     char routeName[100] = "c:/images/meRAW/";
-    printf("ÀúÀåÇÒ ÆÄÀÏ ¸í -> "); scanf("%s", &input);
+    printf("ì €ì¥í•  íŒŒì¼ ëª… -> "); scanf("%s", &input);
     strcat(routeName, input); strcat(routeName, ".raw");
     FILE* file = fopen(routeName, "wb");
     for (int i = 0; i < m_outH; i++) {
         fwrite(m_OutImage[i], sizeof(UC), m_outW, file);
     }
     fclose(file);
-    MessageBox(hwnd, L"ÀúÀå¿Ï·á", L"¸Ş¼¼Áö Ã¢", NULL);
+    MessageBox(hwnd, L"ì €ì¥ì™„ë£Œ", L"ë©”ì„¸ì§€ ì°½", NULL);
 }
-// - ÀÌ¹ÌÁö Ãâ·Â : Output Image¸¦ º¸¿©ÁØ´Ù.
+// - ì´ë¯¸ì§€ ì¶œë ¥ : Output Imageë¥¼ ë³´ì—¬ì¤€ë‹¤.
 void displayImage() {
     system("cls");
     int px;
@@ -333,12 +333,12 @@ void displayImage() {
     }
 }
 
-/// ÇÔ¼ö Á¤ÀÇºÎ (¿µ»óÃ³¸®)
+/// í•¨ìˆ˜ ì •ì˜ë¶€ (ì˜ìƒì²˜ë¦¬)
 
-//È­¼ÒÁ¡Ã³¸®
-// - ÀÌ¹ÌÁö ¿øº»È­ : Input Image·Î Output Image¸¦ ÃÊ±âÈ­½ÃÄÑÁØ´Ù.
+//í™”ì†Œì ì²˜ë¦¬
+// - ì´ë¯¸ì§€ ì›ë³¸í™” : Input Imageë¡œ Output Imageë¥¼ ì´ˆê¸°í™”ì‹œì¼œì¤€ë‹¤.
 void equalImage() {
-    // ±âÁ¸ Ãâ·Â ¸Ş¸ğ¸® ÇØÁ¦
+    // ê¸°ì¡´ ì¶œë ¥ ë©”ëª¨ë¦¬ í•´ì œ
     free2D(m_OutImage, m_outH);
     m_outH = m_inH;
     m_outW = m_inW;
@@ -350,15 +350,15 @@ void equalImage() {
     }
     displayImage();
 }
-// - µ¡¼À »¬¼ÀÀ¸·Î ÀÌ¹ÌÁö ¹à±â Á¶Àı : ¹àÀº, ¾îµÎ¿îºÎºĞ ÀüºÎ ¶È°°ÀÌ ¿µÇâÀ» ³¢Ä§.
+// - ë§ì…ˆ ëº„ì…ˆìœ¼ë¡œ ì´ë¯¸ì§€ ë°ê¸° ì¡°ì ˆ : ë°ì€, ì–´ë‘ìš´ë¶€ë¶„ ì „ë¶€ ë˜‘ê°™ì´ ì˜í–¥ì„ ë¼ì¹¨.
 void pmLightImage() {
-    // ±âÁ¸ Ãâ·Â ¸Ş¸ğ¸® ÇØÁ¦
+    // ê¸°ì¡´ ì¶œë ¥ ë©”ëª¨ë¦¬ í•´ì œ
     free2D(m_OutImage, m_outH);
     m_outH = m_inH;
     m_outW = m_inW;
     m_OutImage = malloc2D(m_outH, m_outW);
     int input = 0;
-    printf("¿øÇÏ´Â ¹à±âÁ¶Àı·® :"); scanf("%d", &input);
+    printf("ì›í•˜ëŠ” ë°ê¸°ì¡°ì ˆëŸ‰ :"); scanf("%d", &input);
     for (int i = 0; i < m_inH; i++) {
         for (int k = 0; k < m_inW; k++) {
             m_OutImage[i][k] += input;
@@ -369,17 +369,17 @@ void pmLightImage() {
     }
     displayImage();
 }
-// - °ö¼À ³ª´°¼ÀÀ¸·Î ÀÌ¹ÌÁö ¹à±â Á¶Àı : ¹àÀº, ¾îµÎ¿îºÎºĞÀ» Àû´çÈ÷ ¿µÇâÀ» ³¢Ä§.
+// - ê³±ì…ˆ ë‚˜ëˆ—ì…ˆìœ¼ë¡œ ì´ë¯¸ì§€ ë°ê¸° ì¡°ì ˆ : ë°ì€, ì–´ë‘ìš´ë¶€ë¶„ì„ ì ë‹¹íˆ ì˜í–¥ì„ ë¼ì¹¨.
 void mdLightImage() {
-    // ±âÁ¸ Ãâ·Â ¸Ş¸ğ¸® ÇØÁ¦
+    // ê¸°ì¡´ ì¶œë ¥ ë©”ëª¨ë¦¬ í•´ì œ
     free2D(m_OutImage, m_outH);
     m_outH = m_inH;
     m_outW = m_inW;
     m_OutImage = malloc2D(m_outH, m_outW);
     int input = 0;
-    printf("(1)°ö¼À (2) ³ª´°¼À\n"); input = _getch();
+    printf("(1)ê³±ì…ˆ (2) ë‚˜ëˆ—ì…ˆ\n"); input = _getch();
     if (input == '1') {
-        printf("¿øÇÏ´Â ¹à±âÁ¶Àı·® :"); scanf("%d", &input);
+        printf("ì›í•˜ëŠ” ë°ê¸°ì¡°ì ˆëŸ‰ :"); scanf("%d", &input);
         for (int i = 0; i < m_inH; i++) {
             for (int k = 0; k < m_inW; k++) {
                 if ((m_InImage[i][k] * input) > 255) m_OutImage[i][k] = 255;
@@ -389,7 +389,7 @@ void mdLightImage() {
         }
     }
     if (input == '2') {
-        printf("¿øÇÏ´Â ¹à±âÁ¶Àı·® :"); scanf("%d", &input);
+        printf("ì›í•˜ëŠ” ë°ê¸°ì¡°ì ˆëŸ‰ :"); scanf("%d", &input);
         for (int i = 0; i < m_inH; i++) {
             for (int k = 0; k < m_inW; k++) {
                 if (input == 0) input = 1;
@@ -402,40 +402,40 @@ void mdLightImage() {
 
     displayImage();
 }
-// - Èæ¹é ¿ø°ú AND¿¬»êÀ» ÇÏ´Â ÇÔ¼öÀÌ´Ù. ºñÆ®¿¬»êÀ¸·Î Ã³¸®ÇÏ¸é ¹«½¼ÀÏÀÌ ÀÏ¾î³¯±î ½Í¾î¼­ ¸¸µé¾ú´Ù.
-// -- 128Å©±âÀÇ ¿øÀ» ÇØ´ç ÀÌ¹ÌÁö Å©±â¿Í °°ÀºÅ©±â·Î ¸¸µç ÈÄ ºñÆ®¿¬»ê Ã³¸®ÇÑ´Ù.
+// - í‘ë°± ì›ê³¼ ANDì—°ì‚°ì„ í•˜ëŠ” í•¨ìˆ˜ì´ë‹¤. ë¹„íŠ¸ì—°ì‚°ìœ¼ë¡œ ì²˜ë¦¬í•˜ë©´ ë¬´ìŠ¨ì¼ì´ ì¼ì–´ë‚ ê¹Œ ì‹¶ì–´ì„œ ë§Œë“¤ì—ˆë‹¤.
+// -- 128í¬ê¸°ì˜ ì›ì„ í•´ë‹¹ ì´ë¯¸ì§€ í¬ê¸°ì™€ ê°™ì€í¬ê¸°ë¡œ ë§Œë“  í›„ ë¹„íŠ¸ì—°ì‚° ì²˜ë¦¬í•œë‹¤.
 void andCircleImage() {
-    // ±âÁ¸ Ãâ·Â ¸Ş¸ğ¸® ÇØÁ¦
+    // ê¸°ì¡´ ì¶œë ¥ ë©”ëª¨ë¦¬ í•´ì œ
     free2D(m_OutImage, m_outH);
     m_outH = m_inH;
     m_outW = m_inW;
     m_OutImage = malloc2D(m_outH, m_outW);
 
-    //128x128»çÀÌÁîÀÇ Èæ¹é¿ø ±×¸²À» °¡Á®¿Â´Ù.
+    //128x128ì‚¬ì´ì¦ˆì˜ í‘ë°±ì› ê·¸ë¦¼ì„ ê°€ì ¸ì˜¨ë‹¤.
     char routeName[100] = "C:/images/meRAW/circle128.raw";
     FILE* file = fopen(routeName, "rb");
     if (file == NULL) return;
-    //¿øÀÇ º» »çÀÌÁî¸¦ ÃøÁ¤
+    //ì›ì˜ ë³¸ ì‚¬ì´ì¦ˆë¥¼ ì¸¡ì •
     fseek(file, 0L, SEEK_END);
     unsigned long size = ftell(file);
     int c_H, c_W;
     c_H = c_W = (int)sqrt(size);
     fclose(file);
-    UC** circ = malloc2D(c_H, c_W); // ¿ø±×¸² ¿øº» ¸Ş¸ğ¸®
-    //128x128 Èæ¹é¿ø ±×¸®±â
+    UC** circ = malloc2D(c_H, c_W); // ì›ê·¸ë¦¼ ì›ë³¸ ë©”ëª¨ë¦¬
+    //128x128 í‘ë°±ì› ê·¸ë¦¬ê¸°
     file = fopen(routeName, "rb");
     for (int i = 0; i < c_H; i++)
         fread(circ[i], sizeof(UC), c_W, file);
     fclose(file);
-    //¿¬»ó¿ë ¿ø ¸¸µé±â
-    UC** circOut = malloc2D(m_outH, m_outW); // ¿¬»êÇÒ¶§ »ç¿ëÇÒ ¿ø±×¸² ¸Ş¸ğ¸®
+    //ì—°ìƒìš© ì› ë§Œë“¤ê¸°
+    UC** circOut = malloc2D(m_outH, m_outW); // ì—°ì‚°í• ë•Œ ì‚¬ìš©í•  ì›ê·¸ë¦¼ ë©”ëª¨ë¦¬
     int scale = (int)(m_outH / c_H);
     for (int i = 0; i < m_outH; i++) {
         for (int k = 0; k < m_outW; k++) {
             circOut[i][k] = circ[i / scale][k / scale];
         }
     }
-    // AND¿¬»ê :: ÁÖÀÇ! ºñÆ®¿¬»êÀÚ´Â ¿ì¼±¼øÀ§°¡ ³·±â¶§¹®¿¡ °ıÈ£Ã³¸® ¸Å¿ì Áß¿ä
+    // ANDì—°ì‚° :: ì£¼ì˜! ë¹„íŠ¸ì—°ì‚°ìëŠ” ìš°ì„ ìˆœìœ„ê°€ ë‚®ê¸°ë•Œë¬¸ì— ê´„í˜¸ì²˜ë¦¬ ë§¤ìš° ì¤‘ìš”
     for (int i = 0; i < m_inH; i++) {
         for (int k = 0; k < m_inW; k++) {
             if ((m_InImage[i][k] & circOut[i][k]) >= 255)  m_OutImage[i][k] = 255;
@@ -447,39 +447,39 @@ void andCircleImage() {
     free2D(circOut, m_outH);
     displayImage();
 }
-// Èæ¹é ¿ø°ú OR¿¬»êÀ» ÇÏ´Â ÇÔ¼öÀÌ´Ù.
-void orCircleImage() { // Èæ¹é ¿ø°ú OR¿¬»êÀ» ÇÏ´Â ÇÔ¼öÀÌ´Ù.
-    // ±âÁ¸ Ãâ·Â ¸Ş¸ğ¸® ÇØÁ¦
+// í‘ë°± ì›ê³¼ ORì—°ì‚°ì„ í•˜ëŠ” í•¨ìˆ˜ì´ë‹¤.
+void orCircleImage() { // í‘ë°± ì›ê³¼ ORì—°ì‚°ì„ í•˜ëŠ” í•¨ìˆ˜ì´ë‹¤.
+    // ê¸°ì¡´ ì¶œë ¥ ë©”ëª¨ë¦¬ í•´ì œ
     free2D(m_OutImage, m_outH);
     m_outH = m_inH;
     m_outW = m_inW;
     m_OutImage = malloc2D(m_outH, m_outW);
 
-    //128x128»çÀÌÁîÀÇ Èæ¹é¿ø ±×¸²À» °¡Á®¿Â´Ù.
+    //128x128ì‚¬ì´ì¦ˆì˜ í‘ë°±ì› ê·¸ë¦¼ì„ ê°€ì ¸ì˜¨ë‹¤.
     char routeName[100] = "C:/images/meRAW/circle128.raw";
     FILE* file = fopen(routeName, "rb");
     if (file == NULL) return;
-    //¿øÀÇ º» »çÀÌÁî¸¦ ÃøÁ¤
+    //ì›ì˜ ë³¸ ì‚¬ì´ì¦ˆë¥¼ ì¸¡ì •
     fseek(file, 0L, SEEK_END);
     unsigned long size = ftell(file);
     int c_H, c_W;
     c_H = c_W = (int)sqrt(size);
     fclose(file);
-    UC** circ = malloc2D(c_H, c_W); // ¿ø±×¸² ¿øº» ¸Ş¸ğ¸®
-    //128x128 Èæ¹é¿ø ±×¸®±â
+    UC** circ = malloc2D(c_H, c_W); // ì›ê·¸ë¦¼ ì›ë³¸ ë©”ëª¨ë¦¬
+    //128x128 í‘ë°±ì› ê·¸ë¦¬ê¸°
     file = fopen(routeName, "rb");
     for (int i = 0; i < c_H; i++)
         fread(circ[i], sizeof(UC), c_W, file);
     fclose(file);
-    //¿¬»ó¿ë ¿ø ¸¸µé±â
-    UC** circOut = malloc2D(m_outH, m_outW); // ¿¬»êÇÒ¶§ »ç¿ëÇÒ ¿ø±×¸² ¸Ş¸ğ¸®
+    //ì—°ìƒìš© ì› ë§Œë“¤ê¸°
+    UC** circOut = malloc2D(m_outH, m_outW); // ì—°ì‚°í• ë•Œ ì‚¬ìš©í•  ì›ê·¸ë¦¼ ë©”ëª¨ë¦¬
     int scale = (int)(m_outH / c_H);
     for (int i = 0; i < m_outH; i++) {
         for (int k = 0; k < m_outW; k++) {
             circOut[i][k] = circ[i / scale][k / scale];
         }
     }
-    // OR¿¬»ê :: ÁÖÀÇ! ºñÆ®¿¬»êÀÚ´Â ¿ì¼±¼øÀ§°¡ ³·±â¶§¹®¿¡ °ıÈ£Ã³¸® ¸Å¿ì Áß¿ä
+    // ORì—°ì‚° :: ì£¼ì˜! ë¹„íŠ¸ì—°ì‚°ìëŠ” ìš°ì„ ìˆœìœ„ê°€ ë‚®ê¸°ë•Œë¬¸ì— ê´„í˜¸ì²˜ë¦¬ ë§¤ìš° ì¤‘ìš”
     for (int i = 0; i < m_inH; i++) {
         for (int k = 0; k < m_inW; k++) {
             if ((m_InImage[i][k] | circOut[i][k]) >= 255)  m_OutImage[i][k] = 255;
@@ -491,9 +491,9 @@ void orCircleImage() { // Èæ¹é ¿ø°ú OR¿¬»êÀ» ÇÏ´Â ÇÔ¼öÀÌ´Ù.
     free2D(circOut, m_outH);
     displayImage();
 }
-// - ÀÌ¹ÌÁö ¿ÏÀü Èæ¹é
+// - ì´ë¯¸ì§€ ì™„ì „ í‘ë°±
 void bwImage() {
-    // ±âÁ¸ Ãâ·Â ¸Ş¸ğ¸® ÇØÁ¦
+    // ê¸°ì¡´ ì¶œë ¥ ë©”ëª¨ë¦¬ í•´ì œ
     free2D(m_OutImage, m_outH);
     m_outH = m_inH;
     m_outW = m_inW;
@@ -506,9 +506,9 @@ void bwImage() {
     }
     displayImage();
 }
-// - ÀÌ¹ÌÁö Æò±Õ°ª Èæ¹é
+// - ì´ë¯¸ì§€ í‰ê· ê°’ í‘ë°±
 void bwAvgImage() {
-    // ±âÁ¸ Ãâ·Â ¸Ş¸ğ¸® ÇØÁ¦
+    // ê¸°ì¡´ ì¶œë ¥ ë©”ëª¨ë¦¬ í•´ì œ
     free2D(m_OutImage, m_outH);
     m_outH = m_inH;
     m_outW = m_inW;
@@ -533,9 +533,9 @@ void bwAvgImage() {
     }
     displayImage();
 }
-// - ÀÌ¹ÌÁö ¹İÀü
+// - ì´ë¯¸ì§€ ë°˜ì „
 void ngtvImage() {
-    // ±âÁ¸ Ãâ·Â ¸Ş¸ğ¸® ÇØÁ¦
+    // ê¸°ì¡´ ì¶œë ¥ ë©”ëª¨ë¦¬ í•´ì œ
     free2D(m_OutImage, m_outH);
     m_outH = m_inH;
     m_outW = m_inW;
@@ -547,27 +547,27 @@ void ngtvImage() {
     }
     displayImage();
 }
-// - ÀÌ¹ÌÁö °¨¸¶ Á¶Àı
+// - ì´ë¯¸ì§€ ê°ë§ˆ ì¡°ì ˆ
 void gammaImage() {
-    // ±âÁ¸ Ãâ·Â ¸Ş¸ğ¸® ÇØÁ¦
+    // ê¸°ì¡´ ì¶œë ¥ ë©”ëª¨ë¦¬ í•´ì œ
     free2D(m_OutImage, m_outH);
     m_outH = m_inH;
     m_outW = m_inW;
     m_OutImage = malloc2D(m_outH, m_outW);
 
     float gamma;
-    printf("°¨¸¶°ª (0.2~1.8) : "); scanf("%f", &gamma);
+    printf("ê°ë§ˆê°’ (0.2~1.8) : "); scanf("%f", &gamma);
     for (int i = 0; i < m_inH; i++) {
         for (int k = 0; k < m_inW; k++) {
             double m = m_InImage[i][k];
-            m_OutImage[i][k] = (unsigned int)255.0 * pow(m / 255.0, gamma); // pow(a,b) ; aÀÇ b Á¦°ö
+            m_OutImage[i][k] = (unsigned int)255.0 * pow(m / 255.0, gamma); // pow(a,b) ; aì˜ b ì œê³±
         }
     }
     displayImage();
 }
-// - ÀÌ¹ÌÁö ÆÄ¶óº¼¶ó ¸ğµå(Cup, Cap)
+// - ì´ë¯¸ì§€ íŒŒë¼ë³¼ë¼ ëª¨ë“œ(Cup, Cap)
 void paraImage() {
-    // ±âÁ¸ Ãâ·Â ¸Ş¸ğ¸® ÇØÁ¦
+    // ê¸°ì¡´ ì¶œë ¥ ë©”ëª¨ë¦¬ í•´ì œ
     free2D(m_OutImage, m_outH);
     m_outH = m_inH; m_outW = m_inW;
     m_OutImage = malloc2D(m_outH, m_outW);
@@ -578,8 +578,8 @@ void paraImage() {
     if (input == '1') {
         for (int i = 0; i < m_outH; i++) {
             for (int k = 0; k < m_outW; k++) {
-                //pow()// °ÅµìÁ¦°ö : xÀÇ yÁ¦°ö
-                double value = 255.0 - 255.0 * pow((m_InImage[i][k] / 128.0 - 1.0), 2); //¹àÀº °÷ ÀÔÃ¼Çü (CAP)
+                //pow()// ê±°ë“­ì œê³± : xì˜ yì œê³±
+                double value = 255.0 - 255.0 * pow((m_InImage[i][k] / 128.0 - 1.0), 2); //ë°ì€ ê³³ ì…ì²´í˜• (CAP)
                 if (value > 255.0) value = 255.0;
                 else if (value < 0.0) value = 0.0;
 
@@ -590,8 +590,8 @@ void paraImage() {
     else {
         for (int i = 0; i < m_outH; i++) {
             for (int k = 0; k < m_outW; k++) {
-                //pow()// °ÅµìÁ¦°ö : xÀÇ yÁ¦°ö
-                double value = 255.0 * pow((m_InImage[i][k] / 128.0 - 1.0), 2); //¾îµÎ¿î °÷ ÀÔÃ¼Çü (CUP)
+                //pow()// ê±°ë“­ì œê³± : xì˜ yì œê³±
+                double value = 255.0 * pow((m_InImage[i][k] / 128.0 - 1.0), 2); //ì–´ë‘ìš´ ê³³ ì…ì²´í˜• (CUP)
                 if (value > 255.0) value = 255.0;
                 else if (value < 0.0) value = 0.0;
 
@@ -602,13 +602,13 @@ void paraImage() {
     displayImage();
 }
 
-///±âÇÏÇĞ Ã³¸®
-// ¿µ»ó Ãà¼Ò ¾Ë°í¸®Áò
+///ê¸°í•˜í•™ ì²˜ë¦¬
+// ì˜ìƒ ì¶•ì†Œ ì•Œê³ ë¦¬ì¦˜
 void zoomOutImage() {
-    // ±âÁ¸ Ãâ·Â ¸Ş¸ğ¸® ÇØÁ¦
+    // ê¸°ì¡´ ì¶œë ¥ ë©”ëª¨ë¦¬ í•´ì œ
     free2D(m_OutImage, m_outH);
     int scale = 0;
-    printf("¿øÇÏ´Â Ãà¼Ò¹èÀ² :"); scanf("%d", &scale);
+    printf("ì›í•˜ëŠ” ì¶•ì†Œë°°ìœ¨ :"); scanf("%d", &scale);
     m_outH = m_inH / scale;
     m_outW = m_inW / scale;
 
@@ -621,12 +621,12 @@ void zoomOutImage() {
     }
     displayImage();
 }
-// ¿µ»ó È®´ë ¾Ë°í¸®Áò
+// ì˜ìƒ í™•ëŒ€ ì•Œê³ ë¦¬ì¦˜
 void zoomInImage() {
-    // ±âÁ¸ Ãâ·Â ¸Ş¸ğ¸® ÇØÁ¦
+    // ê¸°ì¡´ ì¶œë ¥ ë©”ëª¨ë¦¬ í•´ì œ
     free2D(m_OutImage, m_outH);
     int scale = 0;
-    printf("¿øÇÏ´Â È®´ë¹èÀ² :"); scanf("%d", &scale);
+    printf("ì›í•˜ëŠ” í™•ëŒ€ë°°ìœ¨ :"); scanf("%d", &scale);
     m_outH = m_inH * scale;
     m_outW = m_inW * scale;
 
@@ -639,12 +639,12 @@ void zoomInImage() {
     }
     displayImage();
 }
-// ¿µ»ó È®´ë ¹é¿öµù ¾Ë°í¸®Áò
+// ì˜ìƒ í™•ëŒ€ ë°±ì›Œë”© ì•Œê³ ë¦¬ì¦˜
 void zoomInBackImage() {
-    // ±âÁ¸ Ãâ·Â ¸Ş¸ğ¸® ÇØÁ¦
+    // ê¸°ì¡´ ì¶œë ¥ ë©”ëª¨ë¦¬ í•´ì œ
     free2D(m_OutImage, m_outH);
     int scale = 0;
-    printf("¿øÇÏ´Â È®´ë¹èÀ² :"); scanf("%d", &scale);
+    printf("ì›í•˜ëŠ” í™•ëŒ€ë°°ìœ¨ :"); scanf("%d", &scale);
     m_outH = m_inH * scale;
     m_outW = m_inW * scale;
 
@@ -657,22 +657,22 @@ void zoomInBackImage() {
     }
     displayImage();
 }
-// È¸Àü ¾Ë°í¸®Áò  : ¹Ì¿Ï¼º (1. Áß¾ÓÀ¸·Î, 2. ¹é¿öµù 3. °¢µµ ¾ÈÁ¤)
+// íšŒì „ ì•Œê³ ë¦¬ì¦˜  : ë¯¸ì™„ì„± (1. ì¤‘ì•™ìœ¼ë¡œ, 2. ë°±ì›Œë”© 3. ê°ë„ ì•ˆì •)
 void rotateImage() {
-    // ±âÁ¸ Ãâ·Â ¸Ş¸ğ¸® ÇØÁ¦
+    // ê¸°ì¡´ ì¶œë ¥ ë©”ëª¨ë¦¬ í•´ì œ
     free2D(m_OutImage, m_outH);
     m_outH = m_inH;
     m_outW = m_inW;
-    // Ãâ·Â ¿µ»ó ¸Ş¸ğ¸® ÇÒ´ç
+    // ì¶œë ¥ ì˜ìƒ ë©”ëª¨ë¦¬ í• ë‹¹
     m_OutImage = malloc2D(m_outH, m_outW);
     int angle = 0; // 0~360
-    printf("¿øÇÏ´Â È¸Àü°¢µµ :"); scanf("%d", &angle);
+    printf("ì›í•˜ëŠ” íšŒì „ê°ë„ :"); scanf("%d", &angle);
 
     double radian = angle * M_PI / 180.0;
-    // »ï°¢ÇÔ¼ö °ø½Ä :
+    // ì‚¼ê°í•¨ìˆ˜ ê³µì‹ :
     // newX = cos * x - sin * y;
     // newY = sin * x + cos * y;
-    // ÄÄÇ»ÅÍ´Â radian¹Û¿¡ ¾È¹ŞÀ½ (degree¿¡¼­ radianÀ¸·Î Çüº¯È¯ ÇØÁà¾ßÇÑ´Ù)
+    // ì»´í“¨í„°ëŠ” radianë°–ì— ì•ˆë°›ìŒ (degreeì—ì„œ radianìœ¼ë¡œ í˜•ë³€í™˜ í•´ì¤˜ì•¼í•œë‹¤)
 
     for (int i = 0; i < m_inH; i++) {
         for (int k = 0; k < m_inW; k++) {
@@ -685,23 +685,23 @@ void rotateImage() {
     }
     displayImage();
 }
-// È¸Àü¾Ë°í¸®Áò Áß½ÉÁ¡ : Áß¾ÓÈ¸Àü + ¹é¿öµù
+// íšŒì „ì•Œê³ ë¦¬ì¦˜ ì¤‘ì‹¬ì  : ì¤‘ì•™íšŒì „ + ë°±ì›Œë”©
 void midRotateImage() {
-    // ±âÁ¸ Ãâ·Â ¸Ş¸ğ¸® ÇØÁ¦
+    // ê¸°ì¡´ ì¶œë ¥ ë©”ëª¨ë¦¬ í•´ì œ
     free2D(m_OutImage, m_outH);
     m_outH = m_inH;
     m_outW = m_inW;
-    // Ãâ·Â ¿µ»ó ¸Ş¸ğ¸® ÇÒ´ç
+    // ì¶œë ¥ ì˜ìƒ ë©”ëª¨ë¦¬ í• ë‹¹
     m_OutImage = malloc2D(m_outH, m_outW);
     int angle = 0; // 0~360
-    printf("¿øÇÏ´Â ÀÏ¹İ È¸Àü°¢µµ :"); scanf("%d", &angle);
+    printf("ì›í•˜ëŠ” ì¼ë°˜ íšŒì „ê°ë„ :"); scanf("%d", &angle);
     double radian = angle * M_PI / 180.0;
-    // »ï°¢ÇÔ¼ö °ø½Ä :
+    // ì‚¼ê°í•¨ìˆ˜ ê³µì‹ :
     // newX = cos * x - sin * y;
     // newY = sin * x + cos * y;
-    // ÄÄÇ»ÅÍ´Â radian¹Û¿¡ ¾È¹ŞÀ½ (degree¿¡¼­ radianÀ¸·Î Çüº¯È¯ ÇØÁà¾ßÇÑ´Ù)
+    // ì»´í“¨í„°ëŠ” radianë°–ì— ì•ˆë°›ìŒ (degreeì—ì„œ radianìœ¼ë¡œ í˜•ë³€í™˜ í•´ì¤˜ì•¼í•œë‹¤)
 
-    // Áß¾ÓÀ§Ä¡ ±¸ÇÏ±â
+    // ì¤‘ì•™ìœ„ì¹˜ êµ¬í•˜ê¸°
     int cx = m_outH / 2;
     int cy = m_outW / 2;
 
@@ -716,24 +716,24 @@ void midRotateImage() {
     }
     displayImage();
 }
-// È¸Àü¾Ë°í¸®Áò Áß½ÉÁ¡ : Áß¾ÓÈ¸Àü + ¹é¿öµù + È®´ë + ½ÃÀÛºÎÅÍÁß¾Ó¿¡¼­È¸Àü
-void midRotateFullImage() {// ¿µ»ó È¸Àü ¾Ë°í¸®Áò. Áß¾ÓÈ¸Àü+¹é¿öµù+È®´ë
-	// ±âÁ¸ Ãâ·Â ¸Ş¸ğ¸® ÇØÁ¦
+// íšŒì „ì•Œê³ ë¦¬ì¦˜ ì¤‘ì‹¬ì  : ì¤‘ì•™íšŒì „ + ë°±ì›Œë”© + í™•ëŒ€ + ì‹œì‘ë¶€í„°ì¤‘ì•™ì—ì„œíšŒì „
+void midRotateFullImage() {// ì˜ìƒ íšŒì „ ì•Œê³ ë¦¬ì¦˜. ì¤‘ì•™íšŒì „+ë°±ì›Œë”©+í™•ëŒ€
+    // ê¸°ì¡´ ì¶œë ¥ ë©”ëª¨ë¦¬ í•´ì œ
     free2D(m_OutImage, m_outH);
-    // ÁøÂ¥ ¿µ»ó Ã³¸® ¾Ë°í¸®Áò
+    // ì§„ì§œ ì˜ìƒ ì²˜ë¦¬ ì•Œê³ ë¦¬ì¦˜
     int angle; // 0 ~ 360
-    printf("¿øÇÏ´Â È¸Àü°¢µµ :"); scanf("%d", &angle);
+    printf("ì›í•˜ëŠ” íšŒì „ê°ë„ :"); scanf("%d", &angle);
     double tmp_radian = angle % 90 * M_PI / 180.0;
     double tmp_radian90 = (90 - angle % 90) * M_PI / 180.0;
 
-    //(Áß¿ä!) Ãâ·Â ¿µ»óÀÇ ³ôÀÌ¿Í ÆøÀ» °áÁ¤ --> ¾Ë°í¸®Áò¿¡ µû¸§
+    //(ì¤‘ìš”!) ì¶œë ¥ ì˜ìƒì˜ ë†’ì´ì™€ í­ì„ ê²°ì • --> ì•Œê³ ë¦¬ì¦˜ì— ë”°ë¦„
     m_outH = (int)(m_inH * cos(tmp_radian90) + m_inW * cos(tmp_radian));
     m_outW = (int)(m_inW * cos(tmp_radian) + m_inW * cos(tmp_radian90));
-    // Ãâ·Â ¿µ»ó ¸Ş¸ğ¸® ÇÒ´ç
-    double radian = angle * 3.141592 / 180.0;
+    // ì¶œë ¥ ì˜ìƒ ë©”ëª¨ë¦¬ í• ë‹¹
+    double radian = angle * M_PI / 180.0;
     m_OutImage = malloc2D(m_outH, m_outW);
 
-    // ÀÓ½Ã ÀÔ·Â ¿µ»ó ---> Ãâ·Â°ú Å©±â°¡ °°°Ô ÇÏ°í, ÀÔ·Â ¿µ»óÀ» Áß¾Ó¿¡ µÎ±â.
+    // ì„ì‹œ ì…ë ¥ ì˜ìƒ ---> ì¶œë ¥ê³¼ í¬ê¸°ê°€ ê°™ê²Œ í•˜ê³ , ì…ë ¥ ì˜ìƒì„ ì¤‘ì•™ì— ë‘ê¸°.
     UC** tmpInput = malloc2D(m_outH, m_outW);
     int dx = (m_outH - m_inH) / 2;
     int dy = (m_outW - m_inW) / 2;
@@ -741,7 +741,7 @@ void midRotateFullImage() {// ¿µ»ó È¸Àü ¾Ë°í¸®Áò. Áß¾ÓÈ¸Àü+¹é¿öµù+È®´ë
         for (int k = 0; k < m_inW; k++)
             tmpInput[i + dx][k + dy] = m_InImage[i][k];
 
-    // Áß¾Ó À§Ä¡ ±¸ÇÏ±â
+    // ì¤‘ì•™ ìœ„ì¹˜ êµ¬í•˜ê¸°
     int cx = m_outH / 2;
     int cy = m_outW / 2;
     for (int i = 0; i < m_outH; i++) {
@@ -755,8 +755,8 @@ void midRotateFullImage() {// ¿µ»ó È¸Àü ¾Ë°í¸®Áò. Áß¾ÓÈ¸Àü+¹é¿öµù+È®´ë
     free2D(tmpInput, m_outH);
     displayImage();
 }
-void mirrorLRImage() { //ÁÂ¿ì ¹Ì·¯¸µ ÇÔ¼ö
-    // ±âÁ¸ Ãâ·Â ¸Ş¸ğ¸® ÇØÁ¦
+void mirrorLRImage() { //ì¢Œìš° ë¯¸ëŸ¬ë§ í•¨ìˆ˜
+    // ê¸°ì¡´ ì¶œë ¥ ë©”ëª¨ë¦¬ í•´ì œ
     free2D(m_OutImage, m_outH);
     m_outH = m_inH;
     m_outW = m_inW;
@@ -768,8 +768,8 @@ void mirrorLRImage() { //ÁÂ¿ì ¹Ì·¯¸µ ÇÔ¼ö
     }
     displayImage();
 }
-void mirrorUDImage() { //»óÇÏ ¹Ì·¯¸µ ÇÔ¼ö
-    // ±âÁ¸ Ãâ·Â ¸Ş¸ğ¸® ÇØÁ¦
+void mirrorUDImage() { //ìƒí•˜ ë¯¸ëŸ¬ë§ í•¨ìˆ˜
+    // ê¸°ì¡´ ì¶œë ¥ ë©”ëª¨ë¦¬ í•´ì œ
     free2D(m_OutImage, m_outH);
     m_outH = m_inH;
     m_outW = m_inW;
@@ -781,32 +781,32 @@ void mirrorUDImage() { //»óÇÏ ¹Ì·¯¸µ ÇÔ¼ö
     }
     displayImage();
 }
-void moveImage() { //ÀÌµ¿ ÀÌ¹ÌÁö ÇÔ¼ö
-    // ±âÁ¸ Ãâ·Â ¸Ş¸ğ¸® ÇØÁ¦
+void moveImage() { //ì´ë™ ì´ë¯¸ì§€ í•¨ìˆ˜
+    // ê¸°ì¡´ ì¶œë ¥ ë©”ëª¨ë¦¬ í•´ì œ
     free2D(m_OutImage, m_outH);
     m_outH = m_inH;
     m_outW = m_inW;
     m_OutImage = malloc2D(m_outH, m_outW);
     int input = 0;
-    printf("¿øÇÏ´Â ÀÌµ¿ Á¤µµ : "); scanf("%d", &input);
+    printf("ì›í•˜ëŠ” ì´ë™ ì •ë„ : "); scanf("%d", &input);
     if (m_inH < input) input = 0;
     for (int i = input; i < m_inH; i++) {
         for (int k = input; k < m_inW; k++) {
 
-            m_OutImage[i][k] = m_InImage[i-input][k-input];
+            m_OutImage[i][k] = m_InImage[i - input][k - input];
         }
     }
     displayImage();
 }
 
-/// È­¼Ò¿µ¿ªÃ³¸®
+/// í™”ì†Œì˜ì—­ì²˜ë¦¬
 double** malloc2D_double(int  h, int w) {
     double** mem;
     mem = (double**)malloc(h * sizeof(double*));
     for (int i = 0; i < h; i++)
         mem[i] = (double*)malloc(w * sizeof(double));
 
-    // ÃÊ±âÈ­(Clear)
+    // ì´ˆê¸°í™”(Clear)
     for (int i = 0; i < h; i++) {
         for (int k = 0; k < w; k++) {
             mem[i][k] = 0;
@@ -821,31 +821,31 @@ void free2D_double(double** memory, int h) {
         free(memory);
     }
 }
-// ¿¥º¸½Ì ¾Ë°í¸®Áò
+// ì— ë³´ì‹± ì•Œê³ ë¦¬ì¦˜
 void embossImage() {
-    // ±âÁ¸ Ãâ·Â ¸Ş¸ğ¸® ÇØÁ¦
+    // ê¸°ì¡´ ì¶œë ¥ ë©”ëª¨ë¦¬ í•´ì œ
     free2D(m_OutImage, m_outH);
     m_outH = m_inH;
     m_outW = m_inW;
     m_OutImage = malloc2D(m_outH, m_outW);
-    //(Áß¿ä!) È­¼Ò¿µ¿ª ¾Ë°í¸®Áò¿¡ ÇØ´çÇÏ´Â ¸¶½ºÅ© (¿¥º¸½Ì)
+    //(ì¤‘ìš”!) í™”ì†Œì˜ì—­ ì•Œê³ ë¦¬ì¦˜ì— í•´ë‹¹í•˜ëŠ” ë§ˆìŠ¤í¬ (ì— ë³´ì‹±)
     double mask[3][3] = { {-1.,0.,0.},
                           {0.,0.,0.},
                           {0.,0.,1.} };
-    // ÀÓ½Ã ÀÔ·Â/Ãâ·Â ¸Ş¸ğ¸® ÁØºñ
-    double** tmpInput = malloc2D_double(m_inH + 2, m_inW + 2); //¿§Áö±¸°£ ¸¶½ºÅ·À» °£´ÜÇÏ°Ô ÇÏ±âÀ§ÇØ.(³Ğ¾îÁø ¿µ¿ªµéÀº »èÁ¦µÉ ¿¹Á¤)
+    // ì„ì‹œ ì…ë ¥/ì¶œë ¥ ë©”ëª¨ë¦¬ ì¤€ë¹„
+    double** tmpInput = malloc2D_double(m_inH + 2, m_inW + 2); //ì—£ì§€êµ¬ê°„ ë§ˆìŠ¤í‚¹ì„ ê°„ë‹¨í•˜ê²Œ í•˜ê¸°ìœ„í•´.(ë„“ì–´ì§„ ì˜ì—­ë“¤ì€ ì‚­ì œë  ì˜ˆì •)
     double** tmpOutput = malloc2D_double(m_outH, m_outW);
     for (int i = 0; i < m_inH; i++) {
         for (int k = 0; k < m_inW; k++) {
-            tmpInput[i + 1][k + 1] = m_InImage[i][k]; // ÀÓ½ÃInputÀÇ Áß½É¿¡ »çÁøÀ» ³Ö´ÂÁß.
+            tmpInput[i + 1][k + 1] = m_InImage[i][k]; // ì„ì‹œInputì˜ ì¤‘ì‹¬ì— ì‚¬ì§„ì„ ë„£ëŠ”ì¤‘.
         }
     }
 
-    // ÁøÂ¥ ¿µ»ó Ã³¸® ¾Ë°í¸®Áò ==> È¸¼±¿¬»ê
-    double S; // ¸¶½ºÅ©9°³ X ÀÔ·Â¿µ»ó 9°³ÀÇ ÇÕ
+    // ì§„ì§œ ì˜ìƒ ì²˜ë¦¬ ì•Œê³ ë¦¬ì¦˜ ==> íšŒì„ ì—°ì‚°
+    double S; // ë§ˆìŠ¤í¬9ê°œ X ì…ë ¥ì˜ìƒ 9ê°œì˜ í•©
     for (int i = 0; i < m_inH; i++) {
         for (int k = 0; k < m_inW; k++) {
-            S = 0.0; // ´©Àû °ªÀº ÃÊ±âÈ­ÇÏ´Â °Í ±ÇÀå
+            S = 0.0; // ëˆ„ì  ê°’ì€ ì´ˆê¸°í™”í•˜ëŠ” ê²ƒ ê¶Œì¥
             for (int m = 0; m < 3; m++) {
                 for (int n = 0; n < 3; n++) {
                     S += tmpInput[i + m][k + n] * mask[m][n];
@@ -855,13 +855,13 @@ void embossImage() {
         }
     }
 
-    // ¸¶¹«¸® (´Ùµë±â) --> ¸¶½ºÅ©ÇÕ°è°¡ 0 ¶Ç´Â 1 ÀÌ¸é 127 ´õÇÏ±â
+    // ë§ˆë¬´ë¦¬ (ë‹¤ë“¬ê¸°) --> ë§ˆìŠ¤í¬í•©ê³„ê°€ 0 ë˜ëŠ” 1 ì´ë©´ 127 ë”í•˜ê¸°
     for (int i = 0; i < m_outH; i++) {
         for (int k = 0; k < m_outW; k++) {
             tmpOutput[i][k] += 127.0;
         }
     }
-    // tmpOutput -> m_OutImage // ¿À¹öÇÃ·Î¿ì, ¾ğ´õÇÃ·Î¿ì È®ÀÎ ÈÄ.
+    // tmpOutput -> m_OutImage // ì˜¤ë²„í”Œë¡œìš°, ì–¸ë”í”Œë¡œìš° í™•ì¸ í›„.
     for (int i = 0; i < m_outH; i++) {
         for (int k = 0; k < m_outW; k++) {
             double v = tmpOutput[i][k];
@@ -874,19 +874,19 @@ void embossImage() {
     free2D_double(tmpOutput, m_outH);
     displayImage();
 }
-// 3x3ºí·¯¸µ ¾Ë°í¸®Áò
+// 3x3ë¸”ëŸ¬ë§ ì•Œê³ ë¦¬ì¦˜
 void blur3Image() {
-    // ±âÁ¸ Ãâ·Â ¸Ş¸ğ¸® ÇØÁ¦
+    // ê¸°ì¡´ ì¶œë ¥ ë©”ëª¨ë¦¬ í•´ì œ
     free2D(m_OutImage, m_outH);
     m_outH = m_inH;
     m_outW = m_inW;
     m_OutImage = malloc2D(m_outH, m_outW);
-    //(Áß¿ä!) È­¼Ò¿µ¿ª ¾Ë°í¸®Áò¿¡ ÇØ´çÇÏ´Â ¸¶½ºÅ© (ºí·¯¸µ) : ÇÈ¼¿/¸¶½ºÅ© ÀüÃ¼Å©±â 
+    //(ì¤‘ìš”!) í™”ì†Œì˜ì—­ ì•Œê³ ë¦¬ì¦˜ì— í•´ë‹¹í•˜ëŠ” ë§ˆìŠ¤í¬ (ë¸”ëŸ¬ë§) : í”½ì…€/ë§ˆìŠ¤í¬ ì „ì²´í¬ê¸° 
     double mask[3][3] = { {1 / 9.,1 / 9.,1 / 9.},
                           {1 / 9.,1 / 9.,1 / 9.},
                           {1 / 9.,1 / 9.,1 / 9.} };
-    // ÀÓ½Ã ÀÔ·Â/Ãâ·Â ¸Ş¸ğ¸® ÁØºñ
-    double** tmpInput = malloc2D_double(m_inH + 2, m_inW + 2); //¿§Áö±¸°£ ¸¶½ºÅ·À» °£´ÜÇÏ°Ô ÇÏ±âÀ§ÇØ.(³Ğ¾îÁø ¿µ¿ªµéÀº »èÁ¦µÉ ¿¹Á¤)
+    // ì„ì‹œ ì…ë ¥/ì¶œë ¥ ë©”ëª¨ë¦¬ ì¤€ë¹„
+    double** tmpInput = malloc2D_double(m_inH + 2, m_inW + 2); //ì—£ì§€êµ¬ê°„ ë§ˆìŠ¤í‚¹ì„ ê°„ë‹¨í•˜ê²Œ í•˜ê¸°ìœ„í•´.(ë„“ì–´ì§„ ì˜ì—­ë“¤ì€ ì‚­ì œë  ì˜ˆì •)
     double** tmpOutput = malloc2D_double(m_outH, m_outW);
     for (int i = 0; i < m_inH; i++) {
         for (int k = 0; k < m_inW; k++) {
@@ -894,11 +894,11 @@ void blur3Image() {
         }
     }
 
-    // ÁøÂ¥ ¿µ»ó Ã³¸® ¾Ë°í¸®Áò ==> È¸¼±¿¬»ê
-    double S = 0.0; // ¸¶½ºÅ©9°³ X ÀÔ·Â¿µ»ó 9°³ÀÇ ÇÕ...
+    // ì§„ì§œ ì˜ìƒ ì²˜ë¦¬ ì•Œê³ ë¦¬ì¦˜ ==> íšŒì„ ì—°ì‚°
+    double S = 0.0; // ë§ˆìŠ¤í¬9ê°œ X ì…ë ¥ì˜ìƒ 9ê°œì˜ í•©...
     for (int i = 0; i < m_inH; i++) {
         for (int k = 0; k < m_inW; k++) {
-            S = 0.0; // ´©Àû °ªÀº ÃÊ±âÈ­ÇÏ´Â °Í ±ÇÀå
+            S = 0.0; // ëˆ„ì  ê°’ì€ ì´ˆê¸°í™”í•˜ëŠ” ê²ƒ ê¶Œì¥
             for (int m = 0; m < 3; m++) {
                 for (int n = 0; n < 3; n++) {
                     S += tmpInput[i + m][k + n] * mask[m][n];
@@ -908,13 +908,13 @@ void blur3Image() {
         }
     }
 
-    //// ¸¶¹«¸® (´Ùµë±â) --> ¸¶½ºÅ©ÇÕ°è°¡ 0 ¶Ç´Â 1 ÀÌ¸é 127 ´õÇÏ±â
+    //// ë§ˆë¬´ë¦¬ (ë‹¤ë“¬ê¸°) --> ë§ˆìŠ¤í¬í•©ê³„ê°€ 0 ë˜ëŠ” 1 ì´ë©´ 127 ë”í•˜ê¸°
     //for (int i = 0; i < m_outH; i++) {
     //    for (int k = 0; k < m_outW; k++) {
     //        tmpOutput[i][k] += 127.0;
     //    }
     //}
-    // tmpOutput -> m_OutImage // ¿À¹öÇÃ·Î¿ì, ¾ğ´õÇÃ·Î¿ì È®ÀÎ ÈÄ.
+    // tmpOutput -> m_OutImage // ì˜¤ë²„í”Œë¡œìš°, ì–¸ë”í”Œë¡œìš° í™•ì¸ í›„.
     for (int i = 0; i < m_outH; i++) {
         for (int k = 0; k < m_outW; k++) {
             double v = tmpOutput[i][k];
@@ -927,21 +927,21 @@ void blur3Image() {
     free2D_double(tmpOutput, m_outH);
     displayImage();
 }
-// 5x5ºí·¯¸µ ¾Ë°í¸®Áò
+// 5x5ë¸”ëŸ¬ë§ ì•Œê³ ë¦¬ì¦˜
 void blur5Image() {
-    // ±âÁ¸ Ãâ·Â ¸Ş¸ğ¸® ÇØÁ¦
+    // ê¸°ì¡´ ì¶œë ¥ ë©”ëª¨ë¦¬ í•´ì œ
     free2D(m_OutImage, m_outH);
     m_outH = m_inH;
     m_outW = m_inW;
     m_OutImage = malloc2D(m_outH, m_outW);
-    //(Áß¿ä!) È­¼Ò¿µ¿ª ¾Ë°í¸®Áò¿¡ ÇØ´çÇÏ´Â ¸¶½ºÅ© (ºí·¯¸µ) : ÇÈ¼¿/¸¶½ºÅ© ÀüÃ¼Å©±â 
+    //(ì¤‘ìš”!) í™”ì†Œì˜ì—­ ì•Œê³ ë¦¬ì¦˜ì— í•´ë‹¹í•˜ëŠ” ë§ˆìŠ¤í¬ (ë¸”ëŸ¬ë§) : í”½ì…€/ë§ˆìŠ¤í¬ ì „ì²´í¬ê¸° 
     double mask[5][5] = { {1 / 25.,1 / 25.,1 / 25.,1 / 25.,1 / 25.},
                           {1 / 25.,1 / 25.,1 / 25.,1 / 25.,1 / 25.},
                           {1 / 25.,1 / 25.,1 / 25.,1 / 25.,1 / 25.},
                           {1 / 25.,1 / 25.,1 / 25.,1 / 25.,1 / 25.},
                           {1 / 25.,1 / 25.,1 / 25.,1 / 25.,1 / 25.} };
-    // ÀÓ½Ã ÀÔ·Â/Ãâ·Â ¸Ş¸ğ¸® ÁØºñ
-    double** tmpInput = malloc2D_double(m_inH + 4, m_inW + 4); //¿§Áö±¸°£ ¸¶½ºÅ·À» °£´ÜÇÏ°Ô ÇÏ±âÀ§ÇØ.(³Ğ¾îÁø ¿µ¿ªµéÀº »èÁ¦µÉ ¿¹Á¤)
+    // ì„ì‹œ ì…ë ¥/ì¶œë ¥ ë©”ëª¨ë¦¬ ì¤€ë¹„
+    double** tmpInput = malloc2D_double(m_inH + 4, m_inW + 4); //ì—£ì§€êµ¬ê°„ ë§ˆìŠ¤í‚¹ì„ ê°„ë‹¨í•˜ê²Œ í•˜ê¸°ìœ„í•´.(ë„“ì–´ì§„ ì˜ì—­ë“¤ì€ ì‚­ì œë  ì˜ˆì •)
     double** tmpOutput = malloc2D_double(m_outH, m_outW);
     for (int i = 0; i < m_inH; i++) {
         for (int k = 0; k < m_inW; k++) {
@@ -949,11 +949,11 @@ void blur5Image() {
         }
     }
 
-    // ÁøÂ¥ ¿µ»ó Ã³¸® ¾Ë°í¸®Áò ==> È¸¼±¿¬»ê
-    double S = 0.0; // ¸¶½ºÅ©25°³ X ÀÔ·Â¿µ»ó 25°³ÀÇ ÇÕ...
+    // ì§„ì§œ ì˜ìƒ ì²˜ë¦¬ ì•Œê³ ë¦¬ì¦˜ ==> íšŒì„ ì—°ì‚°
+    double S = 0.0; // ë§ˆìŠ¤í¬25ê°œ X ì…ë ¥ì˜ìƒ 25ê°œì˜ í•©...
     for (int i = 0; i < m_inH; i++) {
         for (int k = 0; k < m_inW; k++) {
-            S = 0.0; // ´©Àû °ªÀº ÃÊ±âÈ­ÇÏ´Â °Í ±ÇÀå
+            S = 0.0; // ëˆ„ì  ê°’ì€ ì´ˆê¸°í™”í•˜ëŠ” ê²ƒ ê¶Œì¥
             for (int m = 0; m < 5; m++) {
                 for (int n = 0; n < 5; n++) {
                     S += tmpInput[i + m][k + n] * mask[m][n];
@@ -963,13 +963,13 @@ void blur5Image() {
         }
     }
 
-    //// ¸¶¹«¸® (´Ùµë±â) --> ¸¶½ºÅ©ÇÕ°è°¡ 0 ¶Ç´Â 1 ÀÌ¸é 127 ´õÇÏ±â
+    //// ë§ˆë¬´ë¦¬ (ë‹¤ë“¬ê¸°) --> ë§ˆìŠ¤í¬í•©ê³„ê°€ 0 ë˜ëŠ” 1 ì´ë©´ 127 ë”í•˜ê¸°
     //for (int i = 0; i < m_outH; i++) {
     //    for (int k = 0; k < m_outW; k++) {
     //        tmpOutput[i][k] += 127.0;
     //    }
     //}
-    // tmpOutput -> m_OutImage // ¿À¹öÇÃ·Î¿ì, ¾ğ´õÇÃ·Î¿ì È®ÀÎ ÈÄ.
+    // tmpOutput -> m_OutImage // ì˜¤ë²„í”Œë¡œìš°, ì–¸ë”í”Œë¡œìš° í™•ì¸ í›„.
     for (int i = 0; i < m_outH; i++) {
         for (int k = 0; k < m_outW; k++) {
             double v = tmpOutput[i][k];
@@ -982,27 +982,27 @@ void blur5Image() {
     free2D_double(tmpOutput, m_outH);
     displayImage();
 }
-// ÀÔ·Â°ª´ë·Î ºí·¯Ã³¸®
+// ì…ë ¥ê°’ëŒ€ë¡œ ë¸”ëŸ¬ì²˜ë¦¬
 void blurImage() {
-    // ±âÁ¸ Ãâ·Â ¸Ş¸ğ¸® ÇØÁ¦
+    // ê¸°ì¡´ ì¶œë ¥ ë©”ëª¨ë¦¬ í•´ì œ
     free2D(m_OutImage, m_outH);
     m_outH = m_inH;
     m_outW = m_inW;
     m_OutImage = malloc2D(m_outH, m_outW);
     int input = 0;
-    printf("ºí·¯ °­µµ : "); scanf("%d", &input);
+    printf("ë¸”ëŸ¬ ê°•ë„ : "); scanf("%d", &input);
     if (input % 2 == 0) {
         input += 1;
     }
-    printf("%d x %d ºí·¯ Ã³¸® Áß...\n", input, input);
+    printf("%d x %d ë¸”ëŸ¬ ì²˜ë¦¬ ì¤‘...\n", input, input);
     double** mask = malloc2D_double(input, input);
     for (int i = 0; i < input; i++) {
         for (int k = 0; k < input; k++) {
             mask[i][k] = (double)(1.0 / ((double)(input * input)));
         }
     }
-    // ÀÓ½Ã ÀÔ·Â/Ãâ·Â ¸Ş¸ğ¸® ÁØºñ
-    double** tmpInput = malloc2D_double(m_inH + (int)(input / 2) * 2, m_inW + (int)(input / 2) * 2); //¿§Áö±¸°£ ¸¶½ºÅ·À» °£´ÜÇÏ°Ô ÇÏ±âÀ§ÇØ.(³Ğ¾îÁø ¿µ¿ªµéÀº »èÁ¦µÉ ¿¹Á¤)
+    // ì„ì‹œ ì…ë ¥/ì¶œë ¥ ë©”ëª¨ë¦¬ ì¤€ë¹„
+    double** tmpInput = malloc2D_double(m_inH + (int)(input / 2) * 2, m_inW + (int)(input / 2) * 2); //ì—£ì§€êµ¬ê°„ ë§ˆìŠ¤í‚¹ì„ ê°„ë‹¨í•˜ê²Œ í•˜ê¸°ìœ„í•´.(ë„“ì–´ì§„ ì˜ì—­ë“¤ì€ ì‚­ì œë  ì˜ˆì •)
     double** tmpOutput = malloc2D_double(m_outH, m_outW);
     for (int i = 0; i < m_inH; i++) {
         for (int k = 0; k < m_inW; k++) {
@@ -1010,11 +1010,11 @@ void blurImage() {
         }
     }
 
-    // ÁøÂ¥ ¿µ»ó Ã³¸® ¾Ë°í¸®Áò ==> È¸¼±¿¬»ê
-    double S = 0.0; // ¸¶½ºÅ©9°³ X ÀÔ·Â¿µ»ó 9°³ÀÇ ÇÕ...
+    // ì§„ì§œ ì˜ìƒ ì²˜ë¦¬ ì•Œê³ ë¦¬ì¦˜ ==> íšŒì„ ì—°ì‚°
+    double S = 0.0; // ë§ˆìŠ¤í¬9ê°œ X ì…ë ¥ì˜ìƒ 9ê°œì˜ í•©...
     for (int i = 0; i < m_inH; i++) {
         for (int k = 0; k < m_inW; k++) {
-            S = 0.0; // ´©Àû °ªÀº ÃÊ±âÈ­ÇÏ´Â °Í ±ÇÀå
+            S = 0.0; // ëˆ„ì  ê°’ì€ ì´ˆê¸°í™”í•˜ëŠ” ê²ƒ ê¶Œì¥
             for (int m = 0; m < input; m++) {
                 for (int n = 0; n < input; n++) {
                     S += tmpInput[i + m][k + n] * mask[m][n];
@@ -1023,13 +1023,13 @@ void blurImage() {
             tmpOutput[i][k] = S;
         }
     }
-    //// ¸¶¹«¸® (´Ùµë±â) --> ¸¶½ºÅ©ÇÕ°è°¡ 0 ¶Ç´Â 1 ÀÌ¸é 127 ´õÇÏ±â
+    //// ë§ˆë¬´ë¦¬ (ë‹¤ë“¬ê¸°) --> ë§ˆìŠ¤í¬í•©ê³„ê°€ 0 ë˜ëŠ” 1 ì´ë©´ 127 ë”í•˜ê¸°
     //for (int i = 0; i < m_outH; i++) {
     //    for (int k = 0; k < m_outW; k++) {
     //        tmpOutput[i][k] += 127.0;
     //    }
     //}
-    // tmpOutput -> m_OutImage // ¿À¹öÇÃ·Î¿ì, ¾ğ´õÇÃ·Î¿ì È®ÀÎ ÈÄ.
+    // tmpOutput -> m_OutImage // ì˜¤ë²„í”Œë¡œìš°, ì–¸ë”í”Œë¡œìš° í™•ì¸ í›„.
 
     for (int i = 0; i < m_outH; i++) {
         for (int k = 0; k < m_outW; k++) {
@@ -1043,19 +1043,19 @@ void blurImage() {
     free2D_double(tmpOutput, m_outH);
     displayImage();
 }
-// °¡¿ì½Ã¾È ºí·¯Ã³¸®
+// ê°€ìš°ì‹œì•ˆ ë¸”ëŸ¬ì²˜ë¦¬
 void gausBlur3Image() {
-    // ±âÁ¸ Ãâ·Â ¸Ş¸ğ¸® ÇØÁ¦
+    // ê¸°ì¡´ ì¶œë ¥ ë©”ëª¨ë¦¬ í•´ì œ
     free2D(m_OutImage, m_outH);
     m_outH = m_inH;
     m_outW = m_inW;
     m_OutImage = malloc2D(m_outH, m_outW);
-    //(Áß¿ä!) È­¼Ò¿µ¿ª ¾Ë°í¸®Áò¿¡ ÇØ´çÇÏ´Â ¸¶½ºÅ© (ºí·¯¸µ) : ÇÈ¼¿/¸¶½ºÅ© ÀüÃ¼Å©±â 
+    //(ì¤‘ìš”!) í™”ì†Œì˜ì—­ ì•Œê³ ë¦¬ì¦˜ì— í•´ë‹¹í•˜ëŠ” ë§ˆìŠ¤í¬ (ë¸”ëŸ¬ë§) : í”½ì…€/ë§ˆìŠ¤í¬ ì „ì²´í¬ê¸° 
     double mask[3][3] = { {1 / 16.,1 / 8.,1 / 16.},
                           {1 / 8.,1 / 4.,1 / 8.},
                           {1 / 16.,1 / 8.,1 / 16.} };
-    // ÀÓ½Ã ÀÔ·Â/Ãâ·Â ¸Ş¸ğ¸® ÁØºñ
-    double** tmpInput = malloc2D_double(m_inH + 2, m_inW + 2); //¿§Áö±¸°£ ¸¶½ºÅ·À» °£´ÜÇÏ°Ô ÇÏ±âÀ§ÇØ.(³Ğ¾îÁø ¿µ¿ªµéÀº »èÁ¦µÉ ¿¹Á¤)
+    // ì„ì‹œ ì…ë ¥/ì¶œë ¥ ë©”ëª¨ë¦¬ ì¤€ë¹„
+    double** tmpInput = malloc2D_double(m_inH + 2, m_inW + 2); //ì—£ì§€êµ¬ê°„ ë§ˆìŠ¤í‚¹ì„ ê°„ë‹¨í•˜ê²Œ í•˜ê¸°ìœ„í•´.(ë„“ì–´ì§„ ì˜ì—­ë“¤ì€ ì‚­ì œë  ì˜ˆì •)
     double** tmpOutput = malloc2D_double(m_outH, m_outW);
     for (int i = 0; i < m_inH; i++) {
         for (int k = 0; k < m_inW; k++) {
@@ -1063,11 +1063,11 @@ void gausBlur3Image() {
         }
     }
 
-    // ÁøÂ¥ ¿µ»ó Ã³¸® ¾Ë°í¸®Áò ==> È¸¼±¿¬»ê
-    double S = 0.0; // ¸¶½ºÅ©9°³ X ÀÔ·Â¿µ»ó 9°³ÀÇ ÇÕ...
+    // ì§„ì§œ ì˜ìƒ ì²˜ë¦¬ ì•Œê³ ë¦¬ì¦˜ ==> íšŒì„ ì—°ì‚°
+    double S = 0.0; // ë§ˆìŠ¤í¬9ê°œ X ì…ë ¥ì˜ìƒ 9ê°œì˜ í•©...
     for (int i = 0; i < m_inH; i++) {
         for (int k = 0; k < m_inW; k++) {
-            S = 0.0; // ´©Àû °ªÀº ÃÊ±âÈ­ÇÏ´Â °Í ±ÇÀå
+            S = 0.0; // ëˆ„ì  ê°’ì€ ì´ˆê¸°í™”í•˜ëŠ” ê²ƒ ê¶Œì¥
             for (int m = 0; m < 3; m++) {
                 for (int n = 0; n < 3; n++) {
                     S += tmpInput[i + m][k + n] * mask[m][n];
@@ -1077,13 +1077,13 @@ void gausBlur3Image() {
         }
     }
 
-    //// ¸¶¹«¸® (´Ùµë±â) --> ¸¶½ºÅ©ÇÕ°è°¡ 0 ¶Ç´Â 1 ÀÌ¸é 127 ´õÇÏ±â
+    //// ë§ˆë¬´ë¦¬ (ë‹¤ë“¬ê¸°) --> ë§ˆìŠ¤í¬í•©ê³„ê°€ 0 ë˜ëŠ” 1 ì´ë©´ 127 ë”í•˜ê¸°
     //for (int i = 0; i < m_outH; i++) {
     //    for (int k = 0; k < m_outW; k++) {
     //        tmpOutput[i][k] += 127.0;
     //    }
     //}
-    // tmpOutput -> m_OutImage // ¿À¹öÇÃ·Î¿ì, ¾ğ´õÇÃ·Î¿ì È®ÀÎ ÈÄ.
+    // tmpOutput -> m_OutImage // ì˜¤ë²„í”Œë¡œìš°, ì–¸ë”í”Œë¡œìš° í™•ì¸ í›„.
     for (int i = 0; i < m_outH; i++) {
         for (int k = 0; k < m_outW; k++) {
             double v = tmpOutput[i][k];
@@ -1096,20 +1096,20 @@ void gausBlur3Image() {
     free2D_double(tmpOutput, m_outH);
     displayImage();
 }
-// °íÁÖÆÄÅë°ú»şÇÁ´×1
+// ê³ ì£¼íŒŒí†µê³¼ìƒ¤í”„ë‹1
 void sharp1Image() {
-    // ±âÁ¸ Ãâ·Â ¸Ş¸ğ¸® ÇØÁ¦
+    // ê¸°ì¡´ ì¶œë ¥ ë©”ëª¨ë¦¬ í•´ì œ
     free2D(m_OutImage, m_outH);
     m_outH = m_inH;
     m_outW = m_inW;
     m_OutImage = malloc2D(m_outH, m_outW);
-    //(Áß¿ä!) È­¼Ò¿µ¿ª ¾Ë°í¸®Áò¿¡ ÇØ´çÇÏ´Â ¸¶½ºÅ© (ºí·¯¸µ) : ÇÈ¼¿/¸¶½ºÅ© ÀüÃ¼Å©±â 
+    //(ì¤‘ìš”!) í™”ì†Œì˜ì—­ ì•Œê³ ë¦¬ì¦˜ì— í•´ë‹¹í•˜ëŠ” ë§ˆìŠ¤í¬ (ë¸”ëŸ¬ë§) : í”½ì…€/ë§ˆìŠ¤í¬ ì „ì²´í¬ê¸° 
     int input = 0;
     double mask[3][3] = { {-1.,-1.,-1.},
                           {-1., 9.,-1.},
                           {-1.,-1.,-1.} };
-    // ÀÓ½Ã ÀÔ·Â/Ãâ·Â ¸Ş¸ğ¸® ÁØºñ
-    double** tmpInput = malloc2D_double(m_inH + 2, m_inW + 2); //¿§Áö±¸°£ ¸¶½ºÅ·À» °£´ÜÇÏ°Ô ÇÏ±âÀ§ÇØ.(³Ğ¾îÁø ¿µ¿ªµéÀº »èÁ¦µÉ ¿¹Á¤)
+    // ì„ì‹œ ì…ë ¥/ì¶œë ¥ ë©”ëª¨ë¦¬ ì¤€ë¹„
+    double** tmpInput = malloc2D_double(m_inH + 2, m_inW + 2); //ì—£ì§€êµ¬ê°„ ë§ˆìŠ¤í‚¹ì„ ê°„ë‹¨í•˜ê²Œ í•˜ê¸°ìœ„í•´.(ë„“ì–´ì§„ ì˜ì—­ë“¤ì€ ì‚­ì œë  ì˜ˆì •)
     double** tmpOutput = malloc2D_double(m_outH, m_outW);
     for (int i = 0; i < m_inH; i++) {
         for (int k = 0; k < m_inW; k++) {
@@ -1117,11 +1117,11 @@ void sharp1Image() {
         }
     }
 
-    // ÁøÂ¥ ¿µ»ó Ã³¸® ¾Ë°í¸®Áò ==> È¸¼±¿¬»ê
-    double S = 0.0; // ¸¶½ºÅ©9°³ X ÀÔ·Â¿µ»ó 9°³ÀÇ ÇÕ...
+    // ì§„ì§œ ì˜ìƒ ì²˜ë¦¬ ì•Œê³ ë¦¬ì¦˜ ==> íšŒì„ ì—°ì‚°
+    double S = 0.0; // ë§ˆìŠ¤í¬9ê°œ X ì…ë ¥ì˜ìƒ 9ê°œì˜ í•©...
     for (int i = 0; i < m_inH; i++) {
         for (int k = 0; k < m_inW; k++) {
-            S = 0.0; // ´©Àû °ªÀº ÃÊ±âÈ­ÇÏ´Â °Í ±ÇÀå
+            S = 0.0; // ëˆ„ì  ê°’ì€ ì´ˆê¸°í™”í•˜ëŠ” ê²ƒ ê¶Œì¥
             for (int m = 0; m < 3; m++) {
                 for (int n = 0; n < 3; n++) {
                     S += tmpInput[i + m][k + n] * mask[m][n];
@@ -1131,13 +1131,13 @@ void sharp1Image() {
         }
     }
 
-    //// ¸¶¹«¸® (´Ùµë±â) --> ¸¶½ºÅ©ÇÕ°è°¡ 0 ¶Ç´Â 1 ÀÌ¸é 127 ´õÇÏ±â
+    //// ë§ˆë¬´ë¦¬ (ë‹¤ë“¬ê¸°) --> ë§ˆìŠ¤í¬í•©ê³„ê°€ 0 ë˜ëŠ” 1 ì´ë©´ 127 ë”í•˜ê¸°
     //for (int i = 0; i < m_outH; i++) {
     //    for (int k = 0; k < m_outW; k++) {
     //        tmpOutput[i][k] += 127.0;
     //    }
     //}
-    // tmpOutput -> m_OutImage // ¿À¹öÇÃ·Î¿ì, ¾ğ´õÇÃ·Î¿ì È®ÀÎ ÈÄ.
+    // tmpOutput -> m_OutImage // ì˜¤ë²„í”Œë¡œìš°, ì–¸ë”í”Œë¡œìš° í™•ì¸ í›„.
     for (int i = 0; i < m_outH; i++) {
         for (int k = 0; k < m_outW; k++) {
             double v = tmpOutput[i][k];
@@ -1150,19 +1150,19 @@ void sharp1Image() {
     free2D_double(tmpOutput, m_outH);
     displayImage();
 }
-// °íÁÖÆÄÅë°ú»şÇÁ´×2
+// ê³ ì£¼íŒŒí†µê³¼ìƒ¤í”„ë‹2
 void sharp2Image() {
-    // ±âÁ¸ Ãâ·Â ¸Ş¸ğ¸® ÇØÁ¦
+    // ê¸°ì¡´ ì¶œë ¥ ë©”ëª¨ë¦¬ í•´ì œ
     free2D(m_OutImage, m_outH);
     m_outH = m_inH;
     m_outW = m_inW;
     m_OutImage = malloc2D(m_outH, m_outW);
-    //(Áß¿ä!) È­¼Ò¿µ¿ª ¾Ë°í¸®Áò¿¡ ÇØ´çÇÏ´Â ¸¶½ºÅ© (ºí·¯¸µ) : ÇÈ¼¿/¸¶½ºÅ© ÀüÃ¼Å©±â 
+    //(ì¤‘ìš”!) í™”ì†Œì˜ì—­ ì•Œê³ ë¦¬ì¦˜ì— í•´ë‹¹í•˜ëŠ” ë§ˆìŠ¤í¬ (ë¸”ëŸ¬ë§) : í”½ì…€/ë§ˆìŠ¤í¬ ì „ì²´í¬ê¸° 
     double mask[3][3] = { {0.,-1.,0},
                           {-1., 5.,-1.},
                           {0,-1.,0.} };
-    // ÀÓ½Ã ÀÔ·Â/Ãâ·Â ¸Ş¸ğ¸® ÁØºñ
-    double** tmpInput = malloc2D_double(m_inH + 2, m_inW + 2); //¿§Áö±¸°£ ¸¶½ºÅ·À» °£´ÜÇÏ°Ô ÇÏ±âÀ§ÇØ.(³Ğ¾îÁø ¿µ¿ªµéÀº »èÁ¦µÉ ¿¹Á¤)
+    // ì„ì‹œ ì…ë ¥/ì¶œë ¥ ë©”ëª¨ë¦¬ ì¤€ë¹„
+    double** tmpInput = malloc2D_double(m_inH + 2, m_inW + 2); //ì—£ì§€êµ¬ê°„ ë§ˆìŠ¤í‚¹ì„ ê°„ë‹¨í•˜ê²Œ í•˜ê¸°ìœ„í•´.(ë„“ì–´ì§„ ì˜ì—­ë“¤ì€ ì‚­ì œë  ì˜ˆì •)
     double** tmpOutput = malloc2D_double(m_outH, m_outW);
     for (int i = 0; i < m_inH; i++) {
         for (int k = 0; k < m_inW; k++) {
@@ -1170,11 +1170,11 @@ void sharp2Image() {
         }
     }
 
-    // ÁøÂ¥ ¿µ»ó Ã³¸® ¾Ë°í¸®Áò ==> È¸¼±¿¬»ê
-    double S = 0.0; // ¸¶½ºÅ©9°³ X ÀÔ·Â¿µ»ó 9°³ÀÇ ÇÕ...
+    // ì§„ì§œ ì˜ìƒ ì²˜ë¦¬ ì•Œê³ ë¦¬ì¦˜ ==> íšŒì„ ì—°ì‚°
+    double S = 0.0; // ë§ˆìŠ¤í¬9ê°œ X ì…ë ¥ì˜ìƒ 9ê°œì˜ í•©...
     for (int i = 0; i < m_inH; i++) {
         for (int k = 0; k < m_inW; k++) {
-            S = 0.0; // ´©Àû °ªÀº ÃÊ±âÈ­ÇÏ´Â °Í ±ÇÀå
+            S = 0.0; // ëˆ„ì  ê°’ì€ ì´ˆê¸°í™”í•˜ëŠ” ê²ƒ ê¶Œì¥
             for (int m = 0; m < 3; m++) {
                 for (int n = 0; n < 3; n++) {
                     S += tmpInput[i + m][k + n] * mask[m][n];
@@ -1184,13 +1184,13 @@ void sharp2Image() {
         }
     }
 
-    //// ¸¶¹«¸® (´Ùµë±â) --> ¸¶½ºÅ©ÇÕ°è°¡ 0 ¶Ç´Â 1 ÀÌ¸é 127 ´õÇÏ±â
+    //// ë§ˆë¬´ë¦¬ (ë‹¤ë“¬ê¸°) --> ë§ˆìŠ¤í¬í•©ê³„ê°€ 0 ë˜ëŠ” 1 ì´ë©´ 127 ë”í•˜ê¸°
     //for (int i = 0; i < m_outH; i++) {
     //    for (int k = 0; k < m_outW; k++) {
     //        tmpOutput[i][k] += 127.0;
     //    }
     //}
-    // tmpOutput -> m_OutImage // ¿À¹öÇÃ·Î¿ì, ¾ğ´õÇÃ·Î¿ì È®ÀÎ ÈÄ.
+    // tmpOutput -> m_OutImage // ì˜¤ë²„í”Œë¡œìš°, ì–¸ë”í”Œë¡œìš° í™•ì¸ í›„.
     for (int i = 0; i < m_outH; i++) {
         for (int k = 0; k < m_outW; k++) {
             double v = tmpOutput[i][k];
@@ -1203,19 +1203,19 @@ void sharp2Image() {
     free2D_double(tmpOutput, m_outH);
     displayImage();
 }
-// °íÁÖÆÄ ÇÊÅÍ »şÇÁ´×
+// ê³ ì£¼íŒŒ í•„í„° ìƒ¤í”„ë‹
 void hfSharpImage() {
-    // ±âÁ¸ Ãâ·Â ¸Ş¸ğ¸® ÇØÁ¦
+    // ê¸°ì¡´ ì¶œë ¥ ë©”ëª¨ë¦¬ í•´ì œ
     free2D(m_OutImage, m_outH);
     m_outH = m_inH;
     m_outW = m_inW;
     m_OutImage = malloc2D(m_outH, m_outW);
-    //(Áß¿ä!) È­¼Ò¿µ¿ª ¾Ë°í¸®Áò¿¡ ÇØ´çÇÏ´Â ¸¶½ºÅ© (ºí·¯¸µ) : ÇÈ¼¿/¸¶½ºÅ© ÀüÃ¼Å©±â 
+    //(ì¤‘ìš”!) í™”ì†Œì˜ì—­ ì•Œê³ ë¦¬ì¦˜ì— í•´ë‹¹í•˜ëŠ” ë§ˆìŠ¤í¬ (ë¸”ëŸ¬ë§) : í”½ì…€/ë§ˆìŠ¤í¬ ì „ì²´í¬ê¸° 
     double mask[3][3] = { {-1. / 9.,1 / 9.,-1. / 9.},
                           {-1. / 9.,8. / 9.,-1. / 8.},
                           {-1. / 9.,1 / 9.,-1. / 9.} };
-    // ÀÓ½Ã ÀÔ·Â/Ãâ·Â ¸Ş¸ğ¸® ÁØºñ
-    double** tmpInput = malloc2D_double(m_inH + 2, m_inW + 2); //¿§Áö±¸°£ ¸¶½ºÅ·À» °£´ÜÇÏ°Ô ÇÏ±âÀ§ÇØ.(³Ğ¾îÁø ¿µ¿ªµéÀº »èÁ¦µÉ ¿¹Á¤)
+    // ì„ì‹œ ì…ë ¥/ì¶œë ¥ ë©”ëª¨ë¦¬ ì¤€ë¹„
+    double** tmpInput = malloc2D_double(m_inH + 2, m_inW + 2); //ì—£ì§€êµ¬ê°„ ë§ˆìŠ¤í‚¹ì„ ê°„ë‹¨í•˜ê²Œ í•˜ê¸°ìœ„í•´.(ë„“ì–´ì§„ ì˜ì—­ë“¤ì€ ì‚­ì œë  ì˜ˆì •)
     double** tmpOutput = malloc2D_double(m_outH, m_outW);
     for (int i = 0; i < m_inH; i++) {
         for (int k = 0; k < m_inW; k++) {
@@ -1223,11 +1223,11 @@ void hfSharpImage() {
         }
     }
 
-    // ÁøÂ¥ ¿µ»ó Ã³¸® ¾Ë°í¸®Áò ==> È¸¼±¿¬»ê
-    double S = 0.0; // ¸¶½ºÅ©9°³ X ÀÔ·Â¿µ»ó 9°³ÀÇ ÇÕ...
+    // ì§„ì§œ ì˜ìƒ ì²˜ë¦¬ ì•Œê³ ë¦¬ì¦˜ ==> íšŒì„ ì—°ì‚°
+    double S = 0.0; // ë§ˆìŠ¤í¬9ê°œ X ì…ë ¥ì˜ìƒ 9ê°œì˜ í•©...
     for (int i = 0; i < m_inH; i++) {
         for (int k = 0; k < m_inW; k++) {
-            S = 0.0; // ´©Àû °ªÀº ÃÊ±âÈ­ÇÏ´Â °Í ±ÇÀå
+            S = 0.0; // ëˆ„ì  ê°’ì€ ì´ˆê¸°í™”í•˜ëŠ” ê²ƒ ê¶Œì¥
             for (int m = 0; m < 3; m++) {
                 for (int n = 0; n < 3; n++) {
                     S += tmpInput[i + m][k + n] * mask[m][n];
@@ -1237,13 +1237,13 @@ void hfSharpImage() {
         }
     }
 
-    //// ¸¶¹«¸® (´Ùµë±â) --> ¸¶½ºÅ©ÇÕ°è°¡ 0 ¶Ç´Â 1 ÀÌ¸é 127 ´õÇÏ±â
+    //// ë§ˆë¬´ë¦¬ (ë‹¤ë“¬ê¸°) --> ë§ˆìŠ¤í¬í•©ê³„ê°€ 0 ë˜ëŠ” 1 ì´ë©´ 127 ë”í•˜ê¸°
     //for (int i = 0; i < m_outH; i++) {
     //    for (int k = 0; k < m_outW; k++) {
     //        tmpOutput[i][k] += 127.0;
     //    }
     //}
-    // tmpOutput -> m_OutImage // ¿À¹öÇÃ·Î¿ì, ¾ğ´õÇÃ·Î¿ì È®ÀÎ ÈÄ.
+    // tmpOutput -> m_OutImage // ì˜¤ë²„í”Œë¡œìš°, ì–¸ë”í”Œë¡œìš° í™•ì¸ í›„.
     for (int i = 0; i < m_outH; i++) {
         for (int k = 0; k < m_outW; k++) {
             double v = tmpOutput[i][k];
@@ -1257,20 +1257,20 @@ void hfSharpImage() {
     displayImage();
 }
 
-/// ¿§Áö¿µ¿ª °ËÃâ
-// ¼öÁ÷¿§Áö °ËÃâ
+/// ì—£ì§€ì˜ì—­ ê²€ì¶œ
+// ìˆ˜ì§ì—£ì§€ ê²€ì¶œ
 void vEdgeImage() {
-    // ±âÁ¸ Ãâ·Â ¸Ş¸ğ¸® ÇØÁ¦
+    // ê¸°ì¡´ ì¶œë ¥ ë©”ëª¨ë¦¬ í•´ì œ
     free2D(m_OutImage, m_outH);
     m_outH = m_inH;
     m_outW = m_inW;
     m_OutImage = malloc2D(m_outH, m_outW);
-    //(Áß¿ä!) È­¼Ò¿µ¿ª ¾Ë°í¸®Áò¿¡ ÇØ´çÇÏ´Â ¸¶½ºÅ© (ºí·¯¸µ) : ÇÈ¼¿/¸¶½ºÅ© ÀüÃ¼Å©±â 
+    //(ì¤‘ìš”!) í™”ì†Œì˜ì—­ ì•Œê³ ë¦¬ì¦˜ì— í•´ë‹¹í•˜ëŠ” ë§ˆìŠ¤í¬ (ë¸”ëŸ¬ë§) : í”½ì…€/ë§ˆìŠ¤í¬ ì „ì²´í¬ê¸° 
     double mask[3][3] = { {0,0,0},
                           {-1,1,0},
                           {0,0,0} };
-    // ÀÓ½Ã ÀÔ·Â/Ãâ·Â ¸Ş¸ğ¸® ÁØºñ
-    double** tmpInput = malloc2D_double(m_inH + 2, m_inW + 2); //¿§Áö±¸°£ ¸¶½ºÅ·À» °£´ÜÇÏ°Ô ÇÏ±âÀ§ÇØ.(³Ğ¾îÁø ¿µ¿ªµéÀº »èÁ¦µÉ ¿¹Á¤)
+    // ì„ì‹œ ì…ë ¥/ì¶œë ¥ ë©”ëª¨ë¦¬ ì¤€ë¹„
+    double** tmpInput = malloc2D_double(m_inH + 2, m_inW + 2); //ì—£ì§€êµ¬ê°„ ë§ˆìŠ¤í‚¹ì„ ê°„ë‹¨í•˜ê²Œ í•˜ê¸°ìœ„í•´.(ë„“ì–´ì§„ ì˜ì—­ë“¤ì€ ì‚­ì œë  ì˜ˆì •)
     double** tmpOutput = malloc2D_double(m_outH, m_outW);
     for (int i = 0; i < m_inH; i++) {
         for (int k = 0; k < m_inW; k++) {
@@ -1278,11 +1278,11 @@ void vEdgeImage() {
         }
     }
 
-    // ÁøÂ¥ ¿µ»ó Ã³¸® ¾Ë°í¸®Áò ==> È¸¼±¿¬»ê
-    double S = 0.0; // ¸¶½ºÅ©9°³ X ÀÔ·Â¿µ»ó 9°³ÀÇ ÇÕ...
+    // ì§„ì§œ ì˜ìƒ ì²˜ë¦¬ ì•Œê³ ë¦¬ì¦˜ ==> íšŒì„ ì—°ì‚°
+    double S = 0.0; // ë§ˆìŠ¤í¬9ê°œ X ì…ë ¥ì˜ìƒ 9ê°œì˜ í•©...
     for (int i = 0; i < m_inH; i++) {
         for (int k = 0; k < m_inW; k++) {
-            S = 0.0; // ´©Àû °ªÀº ÃÊ±âÈ­ÇÏ´Â °Í ±ÇÀå
+            S = 0.0; // ëˆ„ì  ê°’ì€ ì´ˆê¸°í™”í•˜ëŠ” ê²ƒ ê¶Œì¥
             for (int m = 0; m < 3; m++) {
                 for (int n = 0; n < 3; n++) {
                     S += tmpInput[i + m][k + n] * mask[m][n];
@@ -1292,13 +1292,13 @@ void vEdgeImage() {
         }
     }
 
-    //// ¸¶¹«¸® (´Ùµë±â) --> ¸¶½ºÅ©ÇÕ°è°¡ 0 ¶Ç´Â 1 ÀÌ¸é 127 ´õÇÏ±â
+    //// ë§ˆë¬´ë¦¬ (ë‹¤ë“¬ê¸°) --> ë§ˆìŠ¤í¬í•©ê³„ê°€ 0 ë˜ëŠ” 1 ì´ë©´ 127 ë”í•˜ê¸°
     //for (int i = 0; i < m_outH; i++) {
     //    for (int k = 0; k < m_outW; k++) {
     //        tmpOutput[i][k] += 127.0;
     //    }
     //}
-    // tmpOutput -> m_OutImage // ¿À¹öÇÃ·Î¿ì, ¾ğ´õÇÃ·Î¿ì È®ÀÎ ÈÄ.
+    // tmpOutput -> m_OutImage // ì˜¤ë²„í”Œë¡œìš°, ì–¸ë”í”Œë¡œìš° í™•ì¸ í›„.
     for (int i = 0; i < m_outH; i++) {
         for (int k = 0; k < m_outW; k++) {
             double v = tmpOutput[i][k];
@@ -1311,19 +1311,19 @@ void vEdgeImage() {
     free2D_double(tmpOutput, m_outH);
     displayImage();
 }
-// ¼öÆò¿§Áö °ËÃâ
+// ìˆ˜í‰ì—£ì§€ ê²€ì¶œ
 void hEdgeImage() {
-    // ±âÁ¸ Ãâ·Â ¸Ş¸ğ¸® ÇØÁ¦
+    // ê¸°ì¡´ ì¶œë ¥ ë©”ëª¨ë¦¬ í•´ì œ
     free2D(m_OutImage, m_outH);
     m_outH = m_inH;
     m_outW = m_inW;
     m_OutImage = malloc2D(m_outH, m_outW);
-    //(Áß¿ä!) È­¼Ò¿µ¿ª ¾Ë°í¸®Áò¿¡ ÇØ´çÇÏ´Â ¸¶½ºÅ© (ºí·¯¸µ) : ÇÈ¼¿/¸¶½ºÅ© ÀüÃ¼Å©±â 
+    //(ì¤‘ìš”!) í™”ì†Œì˜ì—­ ì•Œê³ ë¦¬ì¦˜ì— í•´ë‹¹í•˜ëŠ” ë§ˆìŠ¤í¬ (ë¸”ëŸ¬ë§) : í”½ì…€/ë§ˆìŠ¤í¬ ì „ì²´í¬ê¸° 
     double mask[3][3] = { {0,-1,0},
                           {0,1,0},
                           {0,0,0} };
-    // ÀÓ½Ã ÀÔ·Â/Ãâ·Â ¸Ş¸ğ¸® ÁØºñ
-    double** tmpInput = malloc2D_double(m_inH + 2, m_inW + 2); //¿§Áö±¸°£ ¸¶½ºÅ·À» °£´ÜÇÏ°Ô ÇÏ±âÀ§ÇØ.(³Ğ¾îÁø ¿µ¿ªµéÀº »èÁ¦µÉ ¿¹Á¤)
+    // ì„ì‹œ ì…ë ¥/ì¶œë ¥ ë©”ëª¨ë¦¬ ì¤€ë¹„
+    double** tmpInput = malloc2D_double(m_inH + 2, m_inW + 2); //ì—£ì§€êµ¬ê°„ ë§ˆìŠ¤í‚¹ì„ ê°„ë‹¨í•˜ê²Œ í•˜ê¸°ìœ„í•´.(ë„“ì–´ì§„ ì˜ì—­ë“¤ì€ ì‚­ì œë  ì˜ˆì •)
     double** tmpOutput = malloc2D_double(m_outH, m_outW);
     for (int i = 0; i < m_inH; i++) {
         for (int k = 0; k < m_inW; k++) {
@@ -1331,11 +1331,11 @@ void hEdgeImage() {
         }
     }
 
-    // ÁøÂ¥ ¿µ»ó Ã³¸® ¾Ë°í¸®Áò ==> È¸¼±¿¬»ê
-    double S = 0.0; // ¸¶½ºÅ©9°³ X ÀÔ·Â¿µ»ó 9°³ÀÇ ÇÕ...
+    // ì§„ì§œ ì˜ìƒ ì²˜ë¦¬ ì•Œê³ ë¦¬ì¦˜ ==> íšŒì„ ì—°ì‚°
+    double S = 0.0; // ë§ˆìŠ¤í¬9ê°œ X ì…ë ¥ì˜ìƒ 9ê°œì˜ í•©...
     for (int i = 0; i < m_inH; i++) {
         for (int k = 0; k < m_inW; k++) {
-            S = 0.0; // ´©Àû °ªÀº ÃÊ±âÈ­ÇÏ´Â °Í ±ÇÀå
+            S = 0.0; // ëˆ„ì  ê°’ì€ ì´ˆê¸°í™”í•˜ëŠ” ê²ƒ ê¶Œì¥
             for (int m = 0; m < 3; m++) {
                 for (int n = 0; n < 3; n++) {
                     S += tmpInput[i + m][k + n] * mask[m][n];
@@ -1345,13 +1345,13 @@ void hEdgeImage() {
         }
     }
 
-    //// ¸¶¹«¸® (´Ùµë±â) --> ¸¶½ºÅ©ÇÕ°è°¡ 0 ¶Ç´Â 1 ÀÌ¸é 127 ´õÇÏ±â
+    //// ë§ˆë¬´ë¦¬ (ë‹¤ë“¬ê¸°) --> ë§ˆìŠ¤í¬í•©ê³„ê°€ 0 ë˜ëŠ” 1 ì´ë©´ 127 ë”í•˜ê¸°
     //for (int i = 0; i < m_outH; i++) {
     //    for (int k = 0; k < m_outW; k++) {
     //        tmpOutput[i][k] += 127.0;
     //    }
     //}
-    // tmpOutput -> m_OutImage // ¿À¹öÇÃ·Î¿ì, ¾ğ´õÇÃ·Î¿ì È®ÀÎ ÈÄ.
+    // tmpOutput -> m_OutImage // ì˜¤ë²„í”Œë¡œìš°, ì–¸ë”í”Œë¡œìš° í™•ì¸ í›„.
     for (int i = 0; i < m_outH; i++) {
         for (int k = 0; k < m_outW; k++) {
             double v = tmpOutput[i][k];
@@ -1364,23 +1364,23 @@ void hEdgeImage() {
     free2D_double(tmpOutput, m_outH);
     displayImage();
 }
-// À¯»ç ¿¬»êÀÚ °ËÃâ (ÇØ¾ßÇÔ)
-/// 1Â÷ ¹ÌºĞ°ËÃâ
-// ¼öÆò ·Î¹öÃ÷ °ËÃâ
+// ìœ ì‚¬ ì—°ì‚°ì ê²€ì¶œ (í•´ì•¼í•¨)
+/// 1ì°¨ ë¯¸ë¶„ê²€ì¶œ
+// ìˆ˜í‰ ë¡œë²„ì¸  ê²€ì¶œ
 void robertsHEdgeImage() {
-    // ±âÁ¸ Ãâ·Â ¸Ş¸ğ¸® ÇØÁ¦
+    // ê¸°ì¡´ ì¶œë ¥ ë©”ëª¨ë¦¬ í•´ì œ
     free2D(m_OutImage, m_outH);
     m_outH = m_inH;
     m_outW = m_inW;
     m_OutImage = malloc2D(m_outH, m_outW);
-    //(Áß¿ä!) È­¼Ò¿µ¿ª ¾Ë°í¸®Áò¿¡ ÇØ´çÇÏ´Â ¸¶½ºÅ© (ºí·¯¸µ) : ÇÈ¼¿/¸¶½ºÅ© ÀüÃ¼Å©±â 
+    //(ì¤‘ìš”!) í™”ì†Œì˜ì—­ ì•Œê³ ë¦¬ì¦˜ì— í•´ë‹¹í•˜ëŠ” ë§ˆìŠ¤í¬ (ë¸”ëŸ¬ë§) : í”½ì…€/ë§ˆìŠ¤í¬ ì „ì²´í¬ê¸° 
     double mask[3][3]
         = { {-1,0,0} ,
             {0,1,0} ,
             {0,0,0} };
 
-    // ÀÓ½Ã ÀÔ·Â/Ãâ·Â ¸Ş¸ğ¸® ÁØºñ
-    double** tmpInput = malloc2D_double(m_inH + 2, m_inW + 2); //¿§Áö±¸°£ ¸¶½ºÅ·À» °£´ÜÇÏ°Ô ÇÏ±âÀ§ÇØ.(³Ğ¾îÁø ¿µ¿ªµéÀº »èÁ¦µÉ ¿¹Á¤)
+    // ì„ì‹œ ì…ë ¥/ì¶œë ¥ ë©”ëª¨ë¦¬ ì¤€ë¹„
+    double** tmpInput = malloc2D_double(m_inH + 2, m_inW + 2); //ì—£ì§€êµ¬ê°„ ë§ˆìŠ¤í‚¹ì„ ê°„ë‹¨í•˜ê²Œ í•˜ê¸°ìœ„í•´.(ë„“ì–´ì§„ ì˜ì—­ë“¤ì€ ì‚­ì œë  ì˜ˆì •)
     double** tmpOutput = malloc2D_double(m_outH, m_outW);
     for (int i = 0; i < m_inH; i++) {
         for (int k = 0; k < m_inW; k++) {
@@ -1388,11 +1388,11 @@ void robertsHEdgeImage() {
         }
     }
 
-    // ÁøÂ¥ ¿µ»ó Ã³¸® ¾Ë°í¸®Áò ==> È¸¼±¿¬»ê
-    double S = 0.0; // ¸¶½ºÅ©9°³ X ÀÔ·Â¿µ»ó 9°³ÀÇ ÇÕ...
+    // ì§„ì§œ ì˜ìƒ ì²˜ë¦¬ ì•Œê³ ë¦¬ì¦˜ ==> íšŒì„ ì—°ì‚°
+    double S = 0.0; // ë§ˆìŠ¤í¬9ê°œ X ì…ë ¥ì˜ìƒ 9ê°œì˜ í•©...
     for (int i = 0; i < m_inH; i++) {
         for (int k = 0; k < m_inW; k++) {
-            S = 0.0; // ´©Àû °ªÀº ÃÊ±âÈ­ÇÏ´Â °Í ±ÇÀå
+            S = 0.0; // ëˆ„ì  ê°’ì€ ì´ˆê¸°í™”í•˜ëŠ” ê²ƒ ê¶Œì¥
             for (int m = 0; m < 3; m++) {
                 for (int n = 0; n < 3; n++) {
                     S += tmpInput[i + m][k + n] * mask[m][n];
@@ -1414,21 +1414,21 @@ void robertsHEdgeImage() {
     free2D_double(tmpOutput, m_outH);
     displayImage();
 }
-// ¼öÁ÷ ·Î¹öÃ÷ °ËÃâ
+// ìˆ˜ì§ ë¡œë²„ì¸  ê²€ì¶œ
 void robertsVEdgeImage() {
-    // ±âÁ¸ Ãâ·Â ¸Ş¸ğ¸® ÇØÁ¦
+    // ê¸°ì¡´ ì¶œë ¥ ë©”ëª¨ë¦¬ í•´ì œ
     free2D(m_OutImage, m_outH);
     m_outH = m_inH;
     m_outW = m_inW;
     m_OutImage = malloc2D(m_outH, m_outW);
-    //(Áß¿ä!) È­¼Ò¿µ¿ª ¾Ë°í¸®Áò¿¡ ÇØ´çÇÏ´Â ¸¶½ºÅ© (ºí·¯¸µ) : ÇÈ¼¿/¸¶½ºÅ© ÀüÃ¼Å©±â 
+    //(ì¤‘ìš”!) í™”ì†Œì˜ì—­ ì•Œê³ ë¦¬ì¦˜ì— í•´ë‹¹í•˜ëŠ” ë§ˆìŠ¤í¬ (ë¸”ëŸ¬ë§) : í”½ì…€/ë§ˆìŠ¤í¬ ì „ì²´í¬ê¸° 
     double mask[3][3]
         = { {0,0,-1} ,
             {0,1,0} ,
             {0,0,0} };
 
-    // ÀÓ½Ã ÀÔ·Â/Ãâ·Â ¸Ş¸ğ¸® ÁØºñ
-    double** tmpInput = malloc2D_double(m_inH + 2, m_inW + 2); //¿§Áö±¸°£ ¸¶½ºÅ·À» °£´ÜÇÏ°Ô ÇÏ±âÀ§ÇØ.(³Ğ¾îÁø ¿µ¿ªµéÀº »èÁ¦µÉ ¿¹Á¤)
+    // ì„ì‹œ ì…ë ¥/ì¶œë ¥ ë©”ëª¨ë¦¬ ì¤€ë¹„
+    double** tmpInput = malloc2D_double(m_inH + 2, m_inW + 2); //ì—£ì§€êµ¬ê°„ ë§ˆìŠ¤í‚¹ì„ ê°„ë‹¨í•˜ê²Œ í•˜ê¸°ìœ„í•´.(ë„“ì–´ì§„ ì˜ì—­ë“¤ì€ ì‚­ì œë  ì˜ˆì •)
     double** tmpOutput = malloc2D_double(m_outH, m_outW);
     for (int i = 0; i < m_inH; i++) {
         for (int k = 0; k < m_inW; k++) {
@@ -1436,11 +1436,11 @@ void robertsVEdgeImage() {
         }
     }
 
-    // ÁøÂ¥ ¿µ»ó Ã³¸® ¾Ë°í¸®Áò ==> È¸¼±¿¬»ê
-    double S = 0.0; // ¸¶½ºÅ©9°³ X ÀÔ·Â¿µ»ó 9°³ÀÇ ÇÕ...
+    // ì§„ì§œ ì˜ìƒ ì²˜ë¦¬ ì•Œê³ ë¦¬ì¦˜ ==> íšŒì„ ì—°ì‚°
+    double S = 0.0; // ë§ˆìŠ¤í¬9ê°œ X ì…ë ¥ì˜ìƒ 9ê°œì˜ í•©...
     for (int i = 0; i < m_inH; i++) {
         for (int k = 0; k < m_inW; k++) {
-            S = 0.0; // ´©Àû °ªÀº ÃÊ±âÈ­ÇÏ´Â °Í ±ÇÀå
+            S = 0.0; // ëˆ„ì  ê°’ì€ ì´ˆê¸°í™”í•˜ëŠ” ê²ƒ ê¶Œì¥
             for (int m = 0; m < 3; m++) {
                 for (int n = 0; n < 3; n++) {
                     S += tmpInput[i + m][k + n] * mask[m][n];
@@ -1462,14 +1462,14 @@ void robertsVEdgeImage() {
     free2D_double(tmpOutput, m_outH);
     displayImage();
 }
-// ¼öÆò¼öÁ÷,·Î¹öÃ÷ °ËÃâ
+// ìˆ˜í‰ìˆ˜ì§,ë¡œë²„ì¸  ê²€ì¶œ
 void robertsEdgeImage() {
-    // ±âÁ¸ Ãâ·Â ¸Ş¸ğ¸® ÇØÁ¦
+    // ê¸°ì¡´ ì¶œë ¥ ë©”ëª¨ë¦¬ í•´ì œ
     free2D(m_OutImage, m_outH);
     m_outH = m_inH;
     m_outW = m_inW;
     m_OutImage = malloc2D(m_outH, m_outW);
-    //(Áß¿ä!) È­¼Ò¿µ¿ª ¾Ë°í¸®Áò¿¡ ÇØ´çÇÏ´Â ¸¶½ºÅ© (ºí·¯¸µ) : ÇÈ¼¿/¸¶½ºÅ© ÀüÃ¼Å©±â 
+    //(ì¤‘ìš”!) í™”ì†Œì˜ì—­ ì•Œê³ ë¦¬ì¦˜ì— í•´ë‹¹í•˜ëŠ” ë§ˆìŠ¤í¬ (ë¸”ëŸ¬ë§) : í”½ì…€/ë§ˆìŠ¤í¬ ì „ì²´í¬ê¸° 
     double maskV[3][3]
         = { {-1,0,0} ,
             {0,1,0} ,
@@ -1479,8 +1479,8 @@ void robertsEdgeImage() {
             {0,1,0} ,
             {0,0,0} };
 
-    // ÀÓ½Ã ÀÔ·Â/Ãâ·Â ¸Ş¸ğ¸® ÁØºñ
-    double** tmpInput = malloc2D_double(m_inH + 2, m_inW + 2); //¿§Áö±¸°£ ¸¶½ºÅ·À» °£´ÜÇÏ°Ô ÇÏ±âÀ§ÇØ.(³Ğ¾îÁø ¿µ¿ªµéÀº »èÁ¦µÉ ¿¹Á¤)
+    // ì„ì‹œ ì…ë ¥/ì¶œë ¥ ë©”ëª¨ë¦¬ ì¤€ë¹„
+    double** tmpInput = malloc2D_double(m_inH + 2, m_inW + 2); //ì—£ì§€êµ¬ê°„ ë§ˆìŠ¤í‚¹ì„ ê°„ë‹¨í•˜ê²Œ í•˜ê¸°ìœ„í•´.(ë„“ì–´ì§„ ì˜ì—­ë“¤ì€ ì‚­ì œë  ì˜ˆì •)
     double** tmpOutput = malloc2D_double(m_outH, m_outW);
     double** tmpOutput2 = malloc2D_double(m_outH, m_outW);
     for (int i = 0; i < m_inH; i++) {
@@ -1489,11 +1489,11 @@ void robertsEdgeImage() {
         }
     }
 
-    // ÁøÂ¥ ¿µ»ó Ã³¸® ¾Ë°í¸®Áò ==> È¸¼±¿¬»ê
-    double S = 0.0; // ¸¶½ºÅ©9°³ X ÀÔ·Â¿µ»ó 9°³ÀÇ ÇÕ...
+    // ì§„ì§œ ì˜ìƒ ì²˜ë¦¬ ì•Œê³ ë¦¬ì¦˜ ==> íšŒì„ ì—°ì‚°
+    double S = 0.0; // ë§ˆìŠ¤í¬9ê°œ X ì…ë ¥ì˜ìƒ 9ê°œì˜ í•©...
     for (int i = 0; i < m_inH; i++) {
         for (int k = 0; k < m_inW; k++) {
-            S = 0.0; // ´©Àû °ªÀº ÃÊ±âÈ­ÇÏ´Â °Í ±ÇÀå
+            S = 0.0; // ëˆ„ì  ê°’ì€ ì´ˆê¸°í™”í•˜ëŠ” ê²ƒ ê¶Œì¥
             for (int m = 0; m < 3; m++) {
                 for (int n = 0; n < 3; n++) {
                     S += tmpInput[i + m][k + n] * maskH[m][n];
@@ -1502,10 +1502,10 @@ void robertsEdgeImage() {
             tmpOutput[i][k] = S;
         }
     }
-    S = 0.0; // ¸¶½ºÅ©9°³ X ÀÔ·Â¿µ»ó 9°³ÀÇ ÇÕ...
+    S = 0.0; // ë§ˆìŠ¤í¬9ê°œ X ì…ë ¥ì˜ìƒ 9ê°œì˜ í•©...
     for (int i = 0; i < m_inH; i++) {
         for (int k = 0; k < m_inW; k++) {
-            S = 0.0; // ´©Àû °ªÀº ÃÊ±âÈ­ÇÏ´Â °Í ±ÇÀå
+            S = 0.0; // ëˆ„ì  ê°’ì€ ì´ˆê¸°í™”í•˜ëŠ” ê²ƒ ê¶Œì¥
             for (int m = 0; m < 3; m++) {
                 for (int n = 0; n < 3; n++) {
                     S += tmpInput[i + m][k + n] * maskV[m][n];
@@ -1530,21 +1530,21 @@ void robertsEdgeImage() {
     free2D_double(tmpOutput2, m_outH);
     displayImage();
 }
-// ¼öÁ÷ ÇÁ¸®À­ °ËÃâ
+// ìˆ˜ì§ í”„ë¦¬ìœ— ê²€ì¶œ
 void prwVEdgeImage() {
-    // ±âÁ¸ Ãâ·Â ¸Ş¸ğ¸® ÇØÁ¦
+    // ê¸°ì¡´ ì¶œë ¥ ë©”ëª¨ë¦¬ í•´ì œ
     free2D(m_OutImage, m_outH);
     m_outH = m_inH;
     m_outW = m_inW;
     m_OutImage = malloc2D(m_outH, m_outW);
-    //(Áß¿ä!) È­¼Ò¿µ¿ª ¾Ë°í¸®Áò¿¡ ÇØ´çÇÏ´Â ¸¶½ºÅ© (ºí·¯¸µ) : ÇÈ¼¿/¸¶½ºÅ© ÀüÃ¼Å©±â 
+    //(ì¤‘ìš”!) í™”ì†Œì˜ì—­ ì•Œê³ ë¦¬ì¦˜ì— í•´ë‹¹í•˜ëŠ” ë§ˆìŠ¤í¬ (ë¸”ëŸ¬ë§) : í”½ì…€/ë§ˆìŠ¤í¬ ì „ì²´í¬ê¸° 
     double mask[3][3]
         = { {-1,0,1} ,
             {-1,0,1} ,
             {-1,0,1} };
 
-    // ÀÓ½Ã ÀÔ·Â/Ãâ·Â ¸Ş¸ğ¸® ÁØºñ
-    double** tmpInput = malloc2D_double(m_inH + 2, m_inW + 2); //¿§Áö±¸°£ ¸¶½ºÅ·À» °£´ÜÇÏ°Ô ÇÏ±âÀ§ÇØ.(³Ğ¾îÁø ¿µ¿ªµéÀº »èÁ¦µÉ ¿¹Á¤)
+    // ì„ì‹œ ì…ë ¥/ì¶œë ¥ ë©”ëª¨ë¦¬ ì¤€ë¹„
+    double** tmpInput = malloc2D_double(m_inH + 2, m_inW + 2); //ì—£ì§€êµ¬ê°„ ë§ˆìŠ¤í‚¹ì„ ê°„ë‹¨í•˜ê²Œ í•˜ê¸°ìœ„í•´.(ë„“ì–´ì§„ ì˜ì—­ë“¤ì€ ì‚­ì œë  ì˜ˆì •)
     double** tmpOutput = malloc2D_double(m_outH, m_outW);
     for (int i = 0; i < m_inH; i++) {
         for (int k = 0; k < m_inW; k++) {
@@ -1552,11 +1552,11 @@ void prwVEdgeImage() {
         }
     }
 
-    // ÁøÂ¥ ¿µ»ó Ã³¸® ¾Ë°í¸®Áò ==> È¸¼±¿¬»ê
-    double S = 0.0; // ¸¶½ºÅ©9°³ X ÀÔ·Â¿µ»ó 9°³ÀÇ ÇÕ...
+    // ì§„ì§œ ì˜ìƒ ì²˜ë¦¬ ì•Œê³ ë¦¬ì¦˜ ==> íšŒì„ ì—°ì‚°
+    double S = 0.0; // ë§ˆìŠ¤í¬9ê°œ X ì…ë ¥ì˜ìƒ 9ê°œì˜ í•©...
     for (int i = 0; i < m_inH; i++) {
         for (int k = 0; k < m_inW; k++) {
-            S = 0.0; // ´©Àû °ªÀº ÃÊ±âÈ­ÇÏ´Â °Í ±ÇÀå
+            S = 0.0; // ëˆ„ì  ê°’ì€ ì´ˆê¸°í™”í•˜ëŠ” ê²ƒ ê¶Œì¥
             for (int m = 0; m < 3; m++) {
                 for (int n = 0; n < 3; n++) {
                     S += tmpInput[i + m][k + n] * mask[m][n];
@@ -1578,21 +1578,21 @@ void prwVEdgeImage() {
     free2D_double(tmpOutput, m_outH);
     displayImage();
 }
-// ¼öÆò ÇÁ¸®Ÿm °ËÃâ
+// ìˆ˜í‰ í”„ë¦¬ì›Ÿ ê²€ì¶œ
 void prwHEdgeImage() {
-    // ±âÁ¸ Ãâ·Â ¸Ş¸ğ¸® ÇØÁ¦
+    // ê¸°ì¡´ ì¶œë ¥ ë©”ëª¨ë¦¬ í•´ì œ
     free2D(m_OutImage, m_outH);
     m_outH = m_inH;
     m_outW = m_inW;
     m_OutImage = malloc2D(m_outH, m_outW);
-    //(Áß¿ä!) È­¼Ò¿µ¿ª ¾Ë°í¸®Áò¿¡ ÇØ´çÇÏ´Â ¸¶½ºÅ© (ºí·¯¸µ) : ÇÈ¼¿/¸¶½ºÅ© ÀüÃ¼Å©±â 
+    //(ì¤‘ìš”!) í™”ì†Œì˜ì—­ ì•Œê³ ë¦¬ì¦˜ì— í•´ë‹¹í•˜ëŠ” ë§ˆìŠ¤í¬ (ë¸”ëŸ¬ë§) : í”½ì…€/ë§ˆìŠ¤í¬ ì „ì²´í¬ê¸° 
     double mask[3][3]
         = { {1,1,1} ,
             {0,0,0} ,
             {-1,-1,-1} };
 
-    // ÀÓ½Ã ÀÔ·Â/Ãâ·Â ¸Ş¸ğ¸® ÁØºñ
-    double** tmpInput = malloc2D_double(m_inH + 2, m_inW + 2); //¿§Áö±¸°£ ¸¶½ºÅ·À» °£´ÜÇÏ°Ô ÇÏ±âÀ§ÇØ.(³Ğ¾îÁø ¿µ¿ªµéÀº »èÁ¦µÉ ¿¹Á¤)
+    // ì„ì‹œ ì…ë ¥/ì¶œë ¥ ë©”ëª¨ë¦¬ ì¤€ë¹„
+    double** tmpInput = malloc2D_double(m_inH + 2, m_inW + 2); //ì—£ì§€êµ¬ê°„ ë§ˆìŠ¤í‚¹ì„ ê°„ë‹¨í•˜ê²Œ í•˜ê¸°ìœ„í•´.(ë„“ì–´ì§„ ì˜ì—­ë“¤ì€ ì‚­ì œë  ì˜ˆì •)
     double** tmpOutput = malloc2D_double(m_outH, m_outW);
     for (int i = 0; i < m_inH; i++) {
         for (int k = 0; k < m_inW; k++) {
@@ -1600,11 +1600,11 @@ void prwHEdgeImage() {
         }
     }
 
-    // ÁøÂ¥ ¿µ»ó Ã³¸® ¾Ë°í¸®Áò ==> È¸¼±¿¬»ê
-    double S = 0.0; // ¸¶½ºÅ©9°³ X ÀÔ·Â¿µ»ó 9°³ÀÇ ÇÕ...
+    // ì§„ì§œ ì˜ìƒ ì²˜ë¦¬ ì•Œê³ ë¦¬ì¦˜ ==> íšŒì„ ì—°ì‚°
+    double S = 0.0; // ë§ˆìŠ¤í¬9ê°œ X ì…ë ¥ì˜ìƒ 9ê°œì˜ í•©...
     for (int i = 0; i < m_inH; i++) {
         for (int k = 0; k < m_inW; k++) {
-            S = 0.0; // ´©Àû °ªÀº ÃÊ±âÈ­ÇÏ´Â °Í ±ÇÀå
+            S = 0.0; // ëˆ„ì  ê°’ì€ ì´ˆê¸°í™”í•˜ëŠ” ê²ƒ ê¶Œì¥
             for (int m = 0; m < 3; m++) {
                 for (int n = 0; n < 3; n++) {
                     S += tmpInput[i + m][k + n] * mask[m][n];
@@ -1626,14 +1626,14 @@ void prwHEdgeImage() {
     free2D_double(tmpOutput, m_outH);
     displayImage();
 }
-// ¼öÆò¼öÁ÷,ÇÁ¸®Ÿm °ËÃâ
+// ìˆ˜í‰ìˆ˜ì§,í”„ë¦¬ì›Ÿ ê²€ì¶œ
 void prwEdgeImage() {
-    // ±âÁ¸ Ãâ·Â ¸Ş¸ğ¸® ÇØÁ¦
+    // ê¸°ì¡´ ì¶œë ¥ ë©”ëª¨ë¦¬ í•´ì œ
     free2D(m_OutImage, m_outH);
     m_outH = m_inH;
     m_outW = m_inW;
     m_OutImage = malloc2D(m_outH, m_outW);
-    //(Áß¿ä!) È­¼Ò¿µ¿ª ¾Ë°í¸®Áò¿¡ ÇØ´çÇÏ´Â ¸¶½ºÅ© (ºí·¯¸µ) : ÇÈ¼¿/¸¶½ºÅ© ÀüÃ¼Å©±â 
+    //(ì¤‘ìš”!) í™”ì†Œì˜ì—­ ì•Œê³ ë¦¬ì¦˜ì— í•´ë‹¹í•˜ëŠ” ë§ˆìŠ¤í¬ (ë¸”ëŸ¬ë§) : í”½ì…€/ë§ˆìŠ¤í¬ ì „ì²´í¬ê¸° 
     double maskV[3][3]
         = { {-1,0,1} ,
             {-1,0,1} ,
@@ -1644,8 +1644,8 @@ void prwEdgeImage() {
             {-1,-1,-1} };
 
 
-    // ÀÓ½Ã ÀÔ·Â/Ãâ·Â ¸Ş¸ğ¸® ÁØºñ
-    double** tmpInput = malloc2D_double(m_inH + 2, m_inW + 2); //¿§Áö±¸°£ ¸¶½ºÅ·À» °£´ÜÇÏ°Ô ÇÏ±âÀ§ÇØ.(³Ğ¾îÁø ¿µ¿ªµéÀº »èÁ¦µÉ ¿¹Á¤)
+    // ì„ì‹œ ì…ë ¥/ì¶œë ¥ ë©”ëª¨ë¦¬ ì¤€ë¹„
+    double** tmpInput = malloc2D_double(m_inH + 2, m_inW + 2); //ì—£ì§€êµ¬ê°„ ë§ˆìŠ¤í‚¹ì„ ê°„ë‹¨í•˜ê²Œ í•˜ê¸°ìœ„í•´.(ë„“ì–´ì§„ ì˜ì—­ë“¤ì€ ì‚­ì œë  ì˜ˆì •)
     double** tmpOutput = malloc2D_double(m_outH, m_outW);
     double** tmpOutput2 = malloc2D_double(m_outH, m_outW);
     for (int i = 0; i < m_inH; i++) {
@@ -1654,11 +1654,11 @@ void prwEdgeImage() {
         }
     }
 
-    // ÁøÂ¥ ¿µ»ó Ã³¸® ¾Ë°í¸®Áò ==> È¸¼±¿¬»ê
-    double S = 0.0; // ¸¶½ºÅ©9°³ X ÀÔ·Â¿µ»ó 9°³ÀÇ ÇÕ...
+    // ì§„ì§œ ì˜ìƒ ì²˜ë¦¬ ì•Œê³ ë¦¬ì¦˜ ==> íšŒì„ ì—°ì‚°
+    double S = 0.0; // ë§ˆìŠ¤í¬9ê°œ X ì…ë ¥ì˜ìƒ 9ê°œì˜ í•©...
     for (int i = 0; i < m_inH; i++) {
         for (int k = 0; k < m_inW; k++) {
-            S = 0.0; // ´©Àû °ªÀº ÃÊ±âÈ­ÇÏ´Â °Í ±ÇÀå
+            S = 0.0; // ëˆ„ì  ê°’ì€ ì´ˆê¸°í™”í•˜ëŠ” ê²ƒ ê¶Œì¥
             for (int m = 0; m < 3; m++) {
                 for (int n = 0; n < 3; n++) {
                     S += tmpInput[i + m][k + n] * maskH[m][n];
@@ -1667,10 +1667,10 @@ void prwEdgeImage() {
             tmpOutput[i][k] = S;
         }
     }
-    S = 0.0; // ¸¶½ºÅ©9°³ X ÀÔ·Â¿µ»ó 9°³ÀÇ ÇÕ...
+    S = 0.0; // ë§ˆìŠ¤í¬9ê°œ X ì…ë ¥ì˜ìƒ 9ê°œì˜ í•©...
     for (int i = 0; i < m_inH; i++) {
         for (int k = 0; k < m_inW; k++) {
-            S = 0.0; // ´©Àû °ªÀº ÃÊ±âÈ­ÇÏ´Â °Í ±ÇÀå
+            S = 0.0; // ëˆ„ì  ê°’ì€ ì´ˆê¸°í™”í•˜ëŠ” ê²ƒ ê¶Œì¥
             for (int m = 0; m < 3; m++) {
                 for (int n = 0; n < 3; n++) {
                     S += tmpInput[i + m][k + n] * maskV[m][n];
@@ -1695,21 +1695,21 @@ void prwEdgeImage() {
     free2D_double(tmpOutput2, m_outH);
     displayImage();
 }
-// ¼öÁ÷ ¼Òº§ °ËÃâ
+// ìˆ˜ì§ ì†Œë²¨ ê²€ì¶œ
 void sobelVEdgeImage() {
-    // ±âÁ¸ Ãâ·Â ¸Ş¸ğ¸® ÇØÁ¦
+    // ê¸°ì¡´ ì¶œë ¥ ë©”ëª¨ë¦¬ í•´ì œ
     free2D(m_OutImage, m_outH);
     m_outH = m_inH;
     m_outW = m_inW;
     m_OutImage = malloc2D(m_outH, m_outW);
-    //(Áß¿ä!) È­¼Ò¿µ¿ª ¾Ë°í¸®Áò¿¡ ÇØ´çÇÏ´Â ¸¶½ºÅ© (ºí·¯¸µ) : ÇÈ¼¿/¸¶½ºÅ© ÀüÃ¼Å©±â 
+    //(ì¤‘ìš”!) í™”ì†Œì˜ì—­ ì•Œê³ ë¦¬ì¦˜ì— í•´ë‹¹í•˜ëŠ” ë§ˆìŠ¤í¬ (ë¸”ëŸ¬ë§) : í”½ì…€/ë§ˆìŠ¤í¬ ì „ì²´í¬ê¸° 
     double mask[3][3]
         = { {1,2,1} ,
             {0,0,0} ,
             {-1,-2,-1} };
 
-    // ÀÓ½Ã ÀÔ·Â/Ãâ·Â ¸Ş¸ğ¸® ÁØºñ
-    double** tmpInput = malloc2D_double(m_inH + 2, m_inW + 2); //¿§Áö±¸°£ ¸¶½ºÅ·À» °£´ÜÇÏ°Ô ÇÏ±âÀ§ÇØ.(³Ğ¾îÁø ¿µ¿ªµéÀº »èÁ¦µÉ ¿¹Á¤)
+    // ì„ì‹œ ì…ë ¥/ì¶œë ¥ ë©”ëª¨ë¦¬ ì¤€ë¹„
+    double** tmpInput = malloc2D_double(m_inH + 2, m_inW + 2); //ì—£ì§€êµ¬ê°„ ë§ˆìŠ¤í‚¹ì„ ê°„ë‹¨í•˜ê²Œ í•˜ê¸°ìœ„í•´.(ë„“ì–´ì§„ ì˜ì—­ë“¤ì€ ì‚­ì œë  ì˜ˆì •)
     double** tmpOutput = malloc2D_double(m_outH, m_outW);
     for (int i = 0; i < m_inH; i++) {
         for (int k = 0; k < m_inW; k++) {
@@ -1717,11 +1717,11 @@ void sobelVEdgeImage() {
         }
     }
 
-    // ÁøÂ¥ ¿µ»ó Ã³¸® ¾Ë°í¸®Áò ==> È¸¼±¿¬»ê
-    double S = 0.0; // ¸¶½ºÅ©9°³ X ÀÔ·Â¿µ»ó 9°³ÀÇ ÇÕ...
+    // ì§„ì§œ ì˜ìƒ ì²˜ë¦¬ ì•Œê³ ë¦¬ì¦˜ ==> íšŒì„ ì—°ì‚°
+    double S = 0.0; // ë§ˆìŠ¤í¬9ê°œ X ì…ë ¥ì˜ìƒ 9ê°œì˜ í•©...
     for (int i = 0; i < m_inH; i++) {
         for (int k = 0; k < m_inW; k++) {
-            S = 0.0; // ´©Àû °ªÀº ÃÊ±âÈ­ÇÏ´Â °Í ±ÇÀå
+            S = 0.0; // ëˆ„ì  ê°’ì€ ì´ˆê¸°í™”í•˜ëŠ” ê²ƒ ê¶Œì¥
             for (int m = 0; m < 3; m++) {
                 for (int n = 0; n < 3; n++) {
                     S += tmpInput[i + m][k + n] * mask[m][n];
@@ -1743,21 +1743,21 @@ void sobelVEdgeImage() {
     free2D_double(tmpOutput, m_outH);
     displayImage();
 }
-// ¼öÆò ¼Òº§ °ËÃâ
+// ìˆ˜í‰ ì†Œë²¨ ê²€ì¶œ
 void sobelHEdgeImage() {
-    // ±âÁ¸ Ãâ·Â ¸Ş¸ğ¸® ÇØÁ¦
+    // ê¸°ì¡´ ì¶œë ¥ ë©”ëª¨ë¦¬ í•´ì œ
     free2D(m_OutImage, m_outH);
     m_outH = m_inH;
     m_outW = m_inW;
     m_OutImage = malloc2D(m_outH, m_outW);
-    //(Áß¿ä!) È­¼Ò¿µ¿ª ¾Ë°í¸®Áò¿¡ ÇØ´çÇÏ´Â ¸¶½ºÅ© (ºí·¯¸µ) : ÇÈ¼¿/¸¶½ºÅ© ÀüÃ¼Å©±â 
+    //(ì¤‘ìš”!) í™”ì†Œì˜ì—­ ì•Œê³ ë¦¬ì¦˜ì— í•´ë‹¹í•˜ëŠ” ë§ˆìŠ¤í¬ (ë¸”ëŸ¬ë§) : í”½ì…€/ë§ˆìŠ¤í¬ ì „ì²´í¬ê¸° 
     double mask[3][3]
         = { {-1,0,1} ,
             {-2,0,2} ,
             {-1,0,1} };
 
-    // ÀÓ½Ã ÀÔ·Â/Ãâ·Â ¸Ş¸ğ¸® ÁØºñ
-    double** tmpInput = malloc2D_double(m_inH + 2, m_inW + 2); //¿§Áö±¸°£ ¸¶½ºÅ·À» °£´ÜÇÏ°Ô ÇÏ±âÀ§ÇØ.(³Ğ¾îÁø ¿µ¿ªµéÀº »èÁ¦µÉ ¿¹Á¤)
+    // ì„ì‹œ ì…ë ¥/ì¶œë ¥ ë©”ëª¨ë¦¬ ì¤€ë¹„
+    double** tmpInput = malloc2D_double(m_inH + 2, m_inW + 2); //ì—£ì§€êµ¬ê°„ ë§ˆìŠ¤í‚¹ì„ ê°„ë‹¨í•˜ê²Œ í•˜ê¸°ìœ„í•´.(ë„“ì–´ì§„ ì˜ì—­ë“¤ì€ ì‚­ì œë  ì˜ˆì •)
     double** tmpOutput = malloc2D_double(m_outH, m_outW);
     for (int i = 0; i < m_inH; i++) {
         for (int k = 0; k < m_inW; k++) {
@@ -1765,11 +1765,11 @@ void sobelHEdgeImage() {
         }
     }
 
-    // ÁøÂ¥ ¿µ»ó Ã³¸® ¾Ë°í¸®Áò ==> È¸¼±¿¬»ê
-    double S = 0.0; // ¸¶½ºÅ©9°³ X ÀÔ·Â¿µ»ó 9°³ÀÇ ÇÕ...
+    // ì§„ì§œ ì˜ìƒ ì²˜ë¦¬ ì•Œê³ ë¦¬ì¦˜ ==> íšŒì„ ì—°ì‚°
+    double S = 0.0; // ë§ˆìŠ¤í¬9ê°œ X ì…ë ¥ì˜ìƒ 9ê°œì˜ í•©...
     for (int i = 0; i < m_inH; i++) {
         for (int k = 0; k < m_inW; k++) {
-            S = 0.0; // ´©Àû °ªÀº ÃÊ±âÈ­ÇÏ´Â °Í ±ÇÀå
+            S = 0.0; // ëˆ„ì  ê°’ì€ ì´ˆê¸°í™”í•˜ëŠ” ê²ƒ ê¶Œì¥
             for (int m = 0; m < 3; m++) {
                 for (int n = 0; n < 3; n++) {
                     S += tmpInput[i + m][k + n] * mask[m][n];
@@ -1791,14 +1791,14 @@ void sobelHEdgeImage() {
     free2D_double(tmpOutput, m_outH);
     displayImage();
 }
-// ¼öÆò¼öÁ÷ ¼Òº§ °ËÃâ
+// ìˆ˜í‰ìˆ˜ì§ ì†Œë²¨ ê²€ì¶œ
 void sobelEdgeImage() {
-    // ±âÁ¸ Ãâ·Â ¸Ş¸ğ¸® ÇØÁ¦
+    // ê¸°ì¡´ ì¶œë ¥ ë©”ëª¨ë¦¬ í•´ì œ
     free2D(m_OutImage, m_outH);
     m_outH = m_inH;
     m_outW = m_inW;
     m_OutImage = malloc2D(m_outH, m_outW);
-    //(Áß¿ä!) È­¼Ò¿µ¿ª ¾Ë°í¸®Áò¿¡ ÇØ´çÇÏ´Â ¸¶½ºÅ© (ºí·¯¸µ) : ÇÈ¼¿/¸¶½ºÅ© ÀüÃ¼Å©±â 
+    //(ì¤‘ìš”!) í™”ì†Œì˜ì—­ ì•Œê³ ë¦¬ì¦˜ì— í•´ë‹¹í•˜ëŠ” ë§ˆìŠ¤í¬ (ë¸”ëŸ¬ë§) : í”½ì…€/ë§ˆìŠ¤í¬ ì „ì²´í¬ê¸° 
     double maskV[3][3]
         = { {1,2,1} ,
             {0,0,0} ,
@@ -1808,8 +1808,8 @@ void sobelEdgeImage() {
            {-2,0,2} ,
            {-1,0,1} };
 
-    // ÀÓ½Ã ÀÔ·Â/Ãâ·Â ¸Ş¸ğ¸® ÁØºñ
-    double** tmpInput = malloc2D_double(m_inH + 2, m_inW + 2); //¿§Áö±¸°£ ¸¶½ºÅ·À» °£´ÜÇÏ°Ô ÇÏ±âÀ§ÇØ.(³Ğ¾îÁø ¿µ¿ªµéÀº »èÁ¦µÉ ¿¹Á¤)
+    // ì„ì‹œ ì…ë ¥/ì¶œë ¥ ë©”ëª¨ë¦¬ ì¤€ë¹„
+    double** tmpInput = malloc2D_double(m_inH + 2, m_inW + 2); //ì—£ì§€êµ¬ê°„ ë§ˆìŠ¤í‚¹ì„ ê°„ë‹¨í•˜ê²Œ í•˜ê¸°ìœ„í•´.(ë„“ì–´ì§„ ì˜ì—­ë“¤ì€ ì‚­ì œë  ì˜ˆì •)
     double** tmpOutput = malloc2D_double(m_outH, m_outW);
     double** tmpOutput2 = malloc2D_double(m_outH, m_outW);
     for (int i = 0; i < m_inH; i++) {
@@ -1818,11 +1818,11 @@ void sobelEdgeImage() {
         }
     }
 
-    // ÁøÂ¥ ¿µ»ó Ã³¸® ¾Ë°í¸®Áò ==> È¸¼±¿¬»ê
-    double S = 0.0; // ¸¶½ºÅ©9°³ X ÀÔ·Â¿µ»ó 9°³ÀÇ ÇÕ...
+    // ì§„ì§œ ì˜ìƒ ì²˜ë¦¬ ì•Œê³ ë¦¬ì¦˜ ==> íšŒì„ ì—°ì‚°
+    double S = 0.0; // ë§ˆìŠ¤í¬9ê°œ X ì…ë ¥ì˜ìƒ 9ê°œì˜ í•©...
     for (int i = 0; i < m_inH; i++) {
         for (int k = 0; k < m_inW; k++) {
-            S = 0.0; // ´©Àû °ªÀº ÃÊ±âÈ­ÇÏ´Â °Í ±ÇÀå
+            S = 0.0; // ëˆ„ì  ê°’ì€ ì´ˆê¸°í™”í•˜ëŠ” ê²ƒ ê¶Œì¥
             for (int m = 0; m < 3; m++) {
                 for (int n = 0; n < 3; n++) {
                     S += tmpInput[i + m][k + n] * maskH[m][n];
@@ -1831,10 +1831,10 @@ void sobelEdgeImage() {
             tmpOutput[i][k] = S;
         }
     }
-    S = 0.0; // ¸¶½ºÅ©9°³ X ÀÔ·Â¿µ»ó 9°³ÀÇ ÇÕ...
+    S = 0.0; // ë§ˆìŠ¤í¬9ê°œ X ì…ë ¥ì˜ìƒ 9ê°œì˜ í•©...
     for (int i = 0; i < m_inH; i++) {
         for (int k = 0; k < m_inW; k++) {
-            S = 0.0; // ´©Àû °ªÀº ÃÊ±âÈ­ÇÏ´Â °Í ±ÇÀå
+            S = 0.0; // ëˆ„ì  ê°’ì€ ì´ˆê¸°í™”í•˜ëŠ” ê²ƒ ê¶Œì¥
             for (int m = 0; m < 3; m++) {
                 for (int n = 0; n < 3; n++) {
                     S += tmpInput[i + m][k + n] * maskV[m][n];
@@ -1859,23 +1859,23 @@ void sobelEdgeImage() {
     free2D_double(tmpOutput2, m_outH);
     displayImage();
 }
-/// 2Â÷ ¹ÌºĞ°ËÃâ
-// ¶óÇÃ¶ó½Ã¾È(4) °ËÃâ
-// ¶óÇÃ¶ó½Ã¾ÈÀÇ È¸¼±¸¶½ºÅ© ÇÕÀº 0¾î¾ß ÇÑ´Ù.
+/// 2ì°¨ ë¯¸ë¶„ê²€ì¶œ
+// ë¼í”Œë¼ì‹œì•ˆ(4) ê²€ì¶œ
+// ë¼í”Œë¼ì‹œì•ˆì˜ íšŒì„ ë§ˆìŠ¤í¬ í•©ì€ 0ì–´ì•¼ í•œë‹¤.
 void lapla4EdgeImage() {
-    // ±âÁ¸ Ãâ·Â ¸Ş¸ğ¸® ÇØÁ¦
+    // ê¸°ì¡´ ì¶œë ¥ ë©”ëª¨ë¦¬ í•´ì œ
     free2D(m_OutImage, m_outH);
     m_outH = m_inH;
     m_outW = m_inW;
     m_OutImage = malloc2D(m_outH, m_outW);
-    //(Áß¿ä!) È­¼Ò¿µ¿ª ¾Ë°í¸®Áò¿¡ ÇØ´çÇÏ´Â ¸¶½ºÅ© (ºí·¯¸µ) : ÇÈ¼¿/¸¶½ºÅ© ÀüÃ¼Å©±â 
+    //(ì¤‘ìš”!) í™”ì†Œì˜ì—­ ì•Œê³ ë¦¬ì¦˜ì— í•´ë‹¹í•˜ëŠ” ë§ˆìŠ¤í¬ (ë¸”ëŸ¬ë§) : í”½ì…€/ë§ˆìŠ¤í¬ ì „ì²´í¬ê¸° 
     double mask[3][3]
         = { {0,-1,0} ,
             {-1,4,-1} ,
             {0,-1,0} };
 
-    // ÀÓ½Ã ÀÔ·Â/Ãâ·Â ¸Ş¸ğ¸® ÁØºñ
-    double** tmpInput = malloc2D_double(m_inH + 2, m_inW + 2); //¿§Áö±¸°£ ¸¶½ºÅ·À» °£´ÜÇÏ°Ô ÇÏ±âÀ§ÇØ.(³Ğ¾îÁø ¿µ¿ªµéÀº »èÁ¦µÉ ¿¹Á¤)
+    // ì„ì‹œ ì…ë ¥/ì¶œë ¥ ë©”ëª¨ë¦¬ ì¤€ë¹„
+    double** tmpInput = malloc2D_double(m_inH + 2, m_inW + 2); //ì—£ì§€êµ¬ê°„ ë§ˆìŠ¤í‚¹ì„ ê°„ë‹¨í•˜ê²Œ í•˜ê¸°ìœ„í•´.(ë„“ì–´ì§„ ì˜ì—­ë“¤ì€ ì‚­ì œë  ì˜ˆì •)
     double** tmpOutput = malloc2D_double(m_outH, m_outW);
     for (int i = 0; i < m_inH; i++) {
         for (int k = 0; k < m_inW; k++) {
@@ -1883,11 +1883,11 @@ void lapla4EdgeImage() {
         }
     }
 
-    // ÁøÂ¥ ¿µ»ó Ã³¸® ¾Ë°í¸®Áò ==> È¸¼±¿¬»ê
-    double S = 0.0; // ¸¶½ºÅ©9°³ X ÀÔ·Â¿µ»ó 9°³ÀÇ ÇÕ...
+    // ì§„ì§œ ì˜ìƒ ì²˜ë¦¬ ì•Œê³ ë¦¬ì¦˜ ==> íšŒì„ ì—°ì‚°
+    double S = 0.0; // ë§ˆìŠ¤í¬9ê°œ X ì…ë ¥ì˜ìƒ 9ê°œì˜ í•©...
     for (int i = 0; i < m_inH; i++) {
         for (int k = 0; k < m_inW; k++) {
-            S = 0.0; // ´©Àû °ªÀº ÃÊ±âÈ­ÇÏ´Â °Í ±ÇÀå
+            S = 0.0; // ëˆ„ì  ê°’ì€ ì´ˆê¸°í™”í•˜ëŠ” ê²ƒ ê¶Œì¥
             for (int m = 0; m < 3; m++) {
                 for (int n = 0; n < 3; n++) {
                     S += tmpInput[i + m][k + n] * mask[m][n];
@@ -1909,21 +1909,21 @@ void lapla4EdgeImage() {
     free2D_double(tmpOutput, m_outH);
     displayImage();
 }
-// ¶óÇÃ¶ó½Ã¾È(-8) °ËÃâ
+// ë¼í”Œë¼ì‹œì•ˆ(-8) ê²€ì¶œ
 void laplam8EdgeImage() {
-    // ±âÁ¸ Ãâ·Â ¸Ş¸ğ¸® ÇØÁ¦
+    // ê¸°ì¡´ ì¶œë ¥ ë©”ëª¨ë¦¬ í•´ì œ
     free2D(m_OutImage, m_outH);
     m_outH = m_inH;
     m_outW = m_inW;
     m_OutImage = malloc2D(m_outH, m_outW);
-    //(Áß¿ä!) È­¼Ò¿µ¿ª ¾Ë°í¸®Áò¿¡ ÇØ´çÇÏ´Â ¸¶½ºÅ© (ºí·¯¸µ) : ÇÈ¼¿/¸¶½ºÅ© ÀüÃ¼Å©±â 
+    //(ì¤‘ìš”!) í™”ì†Œì˜ì—­ ì•Œê³ ë¦¬ì¦˜ì— í•´ë‹¹í•˜ëŠ” ë§ˆìŠ¤í¬ (ë¸”ëŸ¬ë§) : í”½ì…€/ë§ˆìŠ¤í¬ ì „ì²´í¬ê¸° 
     double mask[3][3]
         = { {1,1,1} ,
             {1,-8,1} ,
             {1,1,1} };
 
-    // ÀÓ½Ã ÀÔ·Â/Ãâ·Â ¸Ş¸ğ¸® ÁØºñ
-    double** tmpInput = malloc2D_double(m_inH + 2, m_inW + 2); //¿§Áö±¸°£ ¸¶½ºÅ·À» °£´ÜÇÏ°Ô ÇÏ±âÀ§ÇØ.(³Ğ¾îÁø ¿µ¿ªµéÀº »èÁ¦µÉ ¿¹Á¤)
+    // ì„ì‹œ ì…ë ¥/ì¶œë ¥ ë©”ëª¨ë¦¬ ì¤€ë¹„
+    double** tmpInput = malloc2D_double(m_inH + 2, m_inW + 2); //ì—£ì§€êµ¬ê°„ ë§ˆìŠ¤í‚¹ì„ ê°„ë‹¨í•˜ê²Œ í•˜ê¸°ìœ„í•´.(ë„“ì–´ì§„ ì˜ì—­ë“¤ì€ ì‚­ì œë  ì˜ˆì •)
     double** tmpOutput = malloc2D_double(m_outH, m_outW);
     for (int i = 0; i < m_inH; i++) {
         for (int k = 0; k < m_inW; k++) {
@@ -1931,11 +1931,11 @@ void laplam8EdgeImage() {
         }
     }
 
-    // ÁøÂ¥ ¿µ»ó Ã³¸® ¾Ë°í¸®Áò ==> È¸¼±¿¬»ê
-    double S = 0.0; // ¸¶½ºÅ©9°³ X ÀÔ·Â¿µ»ó 9°³ÀÇ ÇÕ...
+    // ì§„ì§œ ì˜ìƒ ì²˜ë¦¬ ì•Œê³ ë¦¬ì¦˜ ==> íšŒì„ ì—°ì‚°
+    double S = 0.0; // ë§ˆìŠ¤í¬9ê°œ X ì…ë ¥ì˜ìƒ 9ê°œì˜ í•©...
     for (int i = 0; i < m_inH; i++) {
         for (int k = 0; k < m_inW; k++) {
-            S = 0.0; // ´©Àû °ªÀº ÃÊ±âÈ­ÇÏ´Â °Í ±ÇÀå
+            S = 0.0; // ëˆ„ì  ê°’ì€ ì´ˆê¸°í™”í•˜ëŠ” ê²ƒ ê¶Œì¥
             for (int m = 0; m < 3; m++) {
                 for (int n = 0; n < 3; n++) {
                     S += tmpInput[i + m][k + n] * mask[m][n];
@@ -1957,21 +1957,21 @@ void laplam8EdgeImage() {
     free2D_double(tmpOutput, m_outH);
     displayImage();
 }
-// ¶óÇÃ¶ó½Ã¾È(8)  °ËÃâ
+// ë¼í”Œë¼ì‹œì•ˆ(8)  ê²€ì¶œ
 void lapla8EdgeImage() {
-    // ±âÁ¸ Ãâ·Â ¸Ş¸ğ¸® ÇØÁ¦
+    // ê¸°ì¡´ ì¶œë ¥ ë©”ëª¨ë¦¬ í•´ì œ
     free2D(m_OutImage, m_outH);
     m_outH = m_inH;
     m_outW = m_inW;
     m_OutImage = malloc2D(m_outH, m_outW);
-    //(Áß¿ä!) È­¼Ò¿µ¿ª ¾Ë°í¸®Áò¿¡ ÇØ´çÇÏ´Â ¸¶½ºÅ© (ºí·¯¸µ) : ÇÈ¼¿/¸¶½ºÅ© ÀüÃ¼Å©±â 
+    //(ì¤‘ìš”!) í™”ì†Œì˜ì—­ ì•Œê³ ë¦¬ì¦˜ì— í•´ë‹¹í•˜ëŠ” ë§ˆìŠ¤í¬ (ë¸”ëŸ¬ë§) : í”½ì…€/ë§ˆìŠ¤í¬ ì „ì²´í¬ê¸° 
     double mask[3][3]
         = { {-1,-1,-1} ,
             {-1,8,-1} ,
             {-1,-1,-1} };
 
-    // ÀÓ½Ã ÀÔ·Â/Ãâ·Â ¸Ş¸ğ¸® ÁØºñ
-    double** tmpInput = malloc2D_double(m_inH + 2, m_inW + 2); //¿§Áö±¸°£ ¸¶½ºÅ·À» °£´ÜÇÏ°Ô ÇÏ±âÀ§ÇØ.(³Ğ¾îÁø ¿µ¿ªµéÀº »èÁ¦µÉ ¿¹Á¤)
+    // ì„ì‹œ ì…ë ¥/ì¶œë ¥ ë©”ëª¨ë¦¬ ì¤€ë¹„
+    double** tmpInput = malloc2D_double(m_inH + 2, m_inW + 2); //ì—£ì§€êµ¬ê°„ ë§ˆìŠ¤í‚¹ì„ ê°„ë‹¨í•˜ê²Œ í•˜ê¸°ìœ„í•´.(ë„“ì–´ì§„ ì˜ì—­ë“¤ì€ ì‚­ì œë  ì˜ˆì •)
     double** tmpOutput = malloc2D_double(m_outH, m_outW);
     for (int i = 0; i < m_inH; i++) {
         for (int k = 0; k < m_inW; k++) {
@@ -1979,11 +1979,11 @@ void lapla8EdgeImage() {
         }
     }
 
-    // ÁøÂ¥ ¿µ»ó Ã³¸® ¾Ë°í¸®Áò ==> È¸¼±¿¬»ê
-    double S = 0.0; // ¸¶½ºÅ©9°³ X ÀÔ·Â¿µ»ó 9°³ÀÇ ÇÕ...
+    // ì§„ì§œ ì˜ìƒ ì²˜ë¦¬ ì•Œê³ ë¦¬ì¦˜ ==> íšŒì„ ì—°ì‚°
+    double S = 0.0; // ë§ˆìŠ¤í¬9ê°œ X ì…ë ¥ì˜ìƒ 9ê°œì˜ í•©...
     for (int i = 0; i < m_inH; i++) {
         for (int k = 0; k < m_inW; k++) {
-            S = 0.0; // ´©Àû °ªÀº ÃÊ±âÈ­ÇÏ´Â °Í ±ÇÀå
+            S = 0.0; // ëˆ„ì  ê°’ì€ ì´ˆê¸°í™”í•˜ëŠ” ê²ƒ ê¶Œì¥
             for (int m = 0; m < 3; m++) {
                 for (int n = 0; n < 3; n++) {
                     S += tmpInput[i + m][k + n] * mask[m][n];
@@ -2006,17 +2006,17 @@ void lapla8EdgeImage() {
     displayImage();
 }
 
-// LoG ¿§Áö°ËÃâ : 1.°¡¿ì½Ã¾È 2. ¶óÇÃ¶ó½Ã¾È
+// LoG ì—£ì§€ê²€ì¶œ : 1.ê°€ìš°ì‹œì•ˆ 2. ë¼í”Œë¼ì‹œì•ˆ
 // LoG (Laplacian of Gausian)
-// ÀâÀ½¿¡ ¹Î°¨ÇÑ ¶óÇÃ¶ó½Ã¾ÈÀÇ ´ÜÁ¡À» °í¾ÈÇÏ°íÀÚ, 
-// °¡¿ì½Ã¾È ½º¹«µù(ºí·¯¸µ)À» ÇÑÈÄ ¶óÇÃ¶ó½Ã¾È »ç¿ë.
+// ì¡ìŒì— ë¯¼ê°í•œ ë¼í”Œë¼ì‹œì•ˆì˜ ë‹¨ì ì„ ê³ ì•ˆí•˜ê³ ì, 
+// ê°€ìš°ì‹œì•ˆ ìŠ¤ë¬´ë”©(ë¸”ëŸ¬ë§)ì„ í•œí›„ ë¼í”Œë¼ì‹œì•ˆ ì‚¬ìš©.
 void logEdgeImage() {
-    // ±âÁ¸ Ãâ·Â ¸Ş¸ğ¸® ÇØÁ¦
+    // ê¸°ì¡´ ì¶œë ¥ ë©”ëª¨ë¦¬ í•´ì œ
     free2D(m_OutImage, m_outH);
     m_outH = m_inH;
     m_outW = m_inW;
     m_OutImage = malloc2D(m_outH, m_outW);
-    //(Áß¿ä!) È­¼Ò¿µ¿ª ¾Ë°í¸®Áò¿¡ ÇØ´çÇÏ´Â ¸¶½ºÅ© (ºí·¯¸µ) : ÇÈ¼¿/¸¶½ºÅ© ÀüÃ¼Å©±â 
+    //(ì¤‘ìš”!) í™”ì†Œì˜ì—­ ì•Œê³ ë¦¬ì¦˜ì— í•´ë‹¹í•˜ëŠ” ë§ˆìŠ¤í¬ (ë¸”ëŸ¬ë§) : í”½ì…€/ë§ˆìŠ¤í¬ ì „ì²´í¬ê¸° 
     double mask[5][5]
         = { {0,0,-1,0,0} ,
             {0,-1,-2,-1,0} ,
@@ -2024,8 +2024,8 @@ void logEdgeImage() {
             {0,-1,-2,-1,0} ,
             {0,0,-1,0,0} };
 
-    // ÀÓ½Ã ÀÔ·Â/Ãâ·Â ¸Ş¸ğ¸® ÁØºñ
-    double** tmpInput = malloc2D_double(m_inH + 4, m_inW + 4); //¿§Áö±¸°£ ¸¶½ºÅ·À» °£´ÜÇÏ°Ô ÇÏ±âÀ§ÇØ.(³Ğ¾îÁø ¿µ¿ªµéÀº »èÁ¦µÉ ¿¹Á¤)
+    // ì„ì‹œ ì…ë ¥/ì¶œë ¥ ë©”ëª¨ë¦¬ ì¤€ë¹„
+    double** tmpInput = malloc2D_double(m_inH + 4, m_inW + 4); //ì—£ì§€êµ¬ê°„ ë§ˆìŠ¤í‚¹ì„ ê°„ë‹¨í•˜ê²Œ í•˜ê¸°ìœ„í•´.(ë„“ì–´ì§„ ì˜ì—­ë“¤ì€ ì‚­ì œë  ì˜ˆì •)
     double** tmpOutput = malloc2D_double(m_outH, m_outW);
     for (int i = 0; i < m_inH; i++) {
         for (int k = 0; k < m_inW; k++) {
@@ -2033,11 +2033,11 @@ void logEdgeImage() {
         }
     }
 
-    // ÁøÂ¥ ¿µ»ó Ã³¸® ¾Ë°í¸®Áò ==> È¸¼±¿¬»ê
-    double S = 0.0; // ¸¶½ºÅ©9°³ X ÀÔ·Â¿µ»ó 9°³ÀÇ ÇÕ...
+    // ì§„ì§œ ì˜ìƒ ì²˜ë¦¬ ì•Œê³ ë¦¬ì¦˜ ==> íšŒì„ ì—°ì‚°
+    double S = 0.0; // ë§ˆìŠ¤í¬9ê°œ X ì…ë ¥ì˜ìƒ 9ê°œì˜ í•©...
     for (int i = 0; i < m_inH; i++) {
         for (int k = 0; k < m_inW; k++) {
-            S = 0.0; // ´©Àû °ªÀº ÃÊ±âÈ­ÇÏ´Â °Í ±ÇÀå
+            S = 0.0; // ëˆ„ì  ê°’ì€ ì´ˆê¸°í™”í•˜ëŠ” ê²ƒ ê¶Œì¥
             for (int m = 0; m < 5; m++) {
                 for (int n = 0; n < 5; n++) {
                     S += tmpInput[i + m][k + n] * mask[m][n];
@@ -2059,14 +2059,14 @@ void logEdgeImage() {
     free2D_double(tmpOutput, m_outH);
     displayImage();
 }
-// DoG ¿§Áö°ËÃâ : LoGÀÇ ´À¸°¼Óµµ¸¦ º¸¿ÏÇÏ±âÀ§ÇØ ³ª¿È.
+// DoG ì—£ì§€ê²€ì¶œ : LoGì˜ ëŠë¦°ì†ë„ë¥¼ ë³´ì™„í•˜ê¸°ìœ„í•´ ë‚˜ì˜´.
 void dogEdgeImage() {
-    // ±âÁ¸ Ãâ·Â ¸Ş¸ğ¸® ÇØÁ¦
+    // ê¸°ì¡´ ì¶œë ¥ ë©”ëª¨ë¦¬ í•´ì œ
     free2D(m_OutImage, m_outH);
     m_outH = m_inH;
     m_outW = m_inW;
     m_OutImage = malloc2D(m_outH, m_outW);
-    //(Áß¿ä!) È­¼Ò¿µ¿ª ¾Ë°í¸®Áò¿¡ ÇØ´çÇÏ´Â ¸¶½ºÅ© (ºí·¯¸µ) : ÇÈ¼¿/¸¶½ºÅ© ÀüÃ¼Å©±â 
+    //(ì¤‘ìš”!) í™”ì†Œì˜ì—­ ì•Œê³ ë¦¬ì¦˜ì— í•´ë‹¹í•˜ëŠ” ë§ˆìŠ¤í¬ (ë¸”ëŸ¬ë§) : í”½ì…€/ë§ˆìŠ¤í¬ ì „ì²´í¬ê¸° 
     double mask[9][9]
         = { {0,0,0,-1,-1,-1,0,0,0},
             {0,-2,-3,-3,-3,-3,-3,-2,0},
@@ -2079,8 +2079,8 @@ void dogEdgeImage() {
             {0,0,0,-1,-1,-1,0,0,0}
     };
 
-    // ÀÓ½Ã ÀÔ·Â/Ãâ·Â ¸Ş¸ğ¸® ÁØºñ
-    double** tmpInput = malloc2D_double(m_inH + 8, m_inW + 8); //¿§Áö±¸°£ ¸¶½ºÅ·À» °£´ÜÇÏ°Ô ÇÏ±âÀ§ÇØ.(³Ğ¾îÁø ¿µ¿ªµéÀº »èÁ¦µÉ ¿¹Á¤)
+    // ì„ì‹œ ì…ë ¥/ì¶œë ¥ ë©”ëª¨ë¦¬ ì¤€ë¹„
+    double** tmpInput = malloc2D_double(m_inH + 8, m_inW + 8); //ì—£ì§€êµ¬ê°„ ë§ˆìŠ¤í‚¹ì„ ê°„ë‹¨í•˜ê²Œ í•˜ê¸°ìœ„í•´.(ë„“ì–´ì§„ ì˜ì—­ë“¤ì€ ì‚­ì œë  ì˜ˆì •)
     double** tmpOutput = malloc2D_double(m_outH, m_outW);
     for (int i = 0; i < m_inH; i++) {
         for (int k = 0; k < m_inW; k++) {
@@ -2088,11 +2088,11 @@ void dogEdgeImage() {
         }
     }
 
-    // ÁøÂ¥ ¿µ»ó Ã³¸® ¾Ë°í¸®Áò ==> È¸¼±¿¬»ê
-    double S = 0.0; // ¸¶½ºÅ©9°³ X ÀÔ·Â¿µ»ó 9°³ÀÇ ÇÕ...
+    // ì§„ì§œ ì˜ìƒ ì²˜ë¦¬ ì•Œê³ ë¦¬ì¦˜ ==> íšŒì„ ì—°ì‚°
+    double S = 0.0; // ë§ˆìŠ¤í¬9ê°œ X ì…ë ¥ì˜ìƒ 9ê°œì˜ í•©...
     for (int i = 0; i < m_inH; i++) {
         for (int k = 0; k < m_inW; k++) {
-            S = 0.0; // ´©Àû °ªÀº ÃÊ±âÈ­ÇÏ´Â °Í ±ÇÀå
+            S = 0.0; // ëˆ„ì  ê°’ì€ ì´ˆê¸°í™”í•˜ëŠ” ê²ƒ ê¶Œì¥
             for (int m = 0; m < 9; m++) {
                 for (int n = 0; n < 9; n++) {
                     S += tmpInput[i + m][k + n] * mask[m][n];
@@ -2115,20 +2115,20 @@ void dogEdgeImage() {
     displayImage();
 }
 
-// À¯»ç¿¬»êÀÚ
+// ìœ ì‚¬ì—°ì‚°ì
 double doubleABS(double x) {
-    // ½Ç¼öÀÇ Àı´ë °ª ¿¬»ê ÇÔ¼ö
+    // ì‹¤ìˆ˜ì˜ ì ˆëŒ€ ê°’ ì—°ì‚° í•¨ìˆ˜
     if (x >= 0) return x;
     else        return -x;
 }
-void usaImage(){
-    // ±âÁ¸ Ãâ·Â ¸Ş¸ğ¸® ÇØÁ¦
+void usaImage() {
+    // ê¸°ì¡´ ì¶œë ¥ ë©”ëª¨ë¦¬ í•´ì œ
     free2D(m_OutImage, m_outH);
     m_outH = m_inH;
     m_outW = m_inW;
     m_OutImage = malloc2D(m_outH, m_outW);
-    // ÀÓ½Ã ÀÔ·Â/Ãâ·Â ¸Ş¸ğ¸® ÁØºñ
-    double** tmpInput = malloc2D_double(m_inH + 2, m_inW + 2); //¿§Áö±¸°£ ¸¶½ºÅ·À» °£´ÜÇÏ°Ô ÇÏ±âÀ§ÇØ.(³Ğ¾îÁø ¿µ¿ªµéÀº »èÁ¦µÉ ¿¹Á¤)
+    // ì„ì‹œ ì…ë ¥/ì¶œë ¥ ë©”ëª¨ë¦¬ ì¤€ë¹„
+    double** tmpInput = malloc2D_double(m_inH + 2, m_inW + 2); //ì—£ì§€êµ¬ê°„ ë§ˆìŠ¤í‚¹ì„ ê°„ë‹¨í•˜ê²Œ í•˜ê¸°ìœ„í•´.(ë„“ì–´ì§„ ì˜ì—­ë“¤ì€ ì‚­ì œë  ì˜ˆì •)
     double** tmpOutput = malloc2D_double(m_outH, m_outW);
     for (int i = 0; i < m_inH; i++) {
         for (int k = 0; k < m_inW; k++) {
@@ -2136,17 +2136,17 @@ void usaImage(){
         }
     }
 
-    // ÁøÂ¥ ¿µ»ó Ã³¸® ¾Ë°í¸®Áò ==> È¸¼±¿¬»ê
-    double max = 0.0; // ºí·ÏÀÌ ÀÌµ¿ÇÒ ¶§ ¸¶´Ù ÃÖ´ë°ª
+    // ì§„ì§œ ì˜ìƒ ì²˜ë¦¬ ì•Œê³ ë¦¬ì¦˜ ==> íšŒì„ ì—°ì‚°
+    double max = 0.0; // ë¸”ë¡ì´ ì´ë™í•  ë•Œ ë§ˆë‹¤ ìµœëŒ€ê°’
     for (int i = 0; i < m_inH; i++) {
         for (int k = 0; k < m_inW; k++) {
-            max = 0.0; // ÃÖ´ë°ªµµ ÃÊ±âÈ­
+            max = 0.0; // ìµœëŒ€ê°’ë„ ì´ˆê¸°í™”
             for (int m = 0; m < 3; m++) {
                 for (int n = 0; n < 3; n++) {
                     if (doubleABS(tmpInput[i + 1][k + 1] -
                         tmpInput[i + m][k + n]) >= max)
-                        // ºí·ÏÀÇ °¡¿î´ë°ª - ºí·ÏÀÇ ÁÖº¯ ÇÈ¼¿°ªÀÇ Àı´ë°ª Áß¿¡¼­
-                        // ÃÖ´ë°ªÀ» Ã£´Â´Ù.
+                        // ë¸”ë¡ì˜ ê°€ìš´ëŒ€ê°’ - ë¸”ë¡ì˜ ì£¼ë³€ í”½ì…€ê°’ì˜ ì ˆëŒ€ê°’ ì¤‘ì—ì„œ
+                        // ìµœëŒ€ê°’ì„ ì°¾ëŠ”ë‹¤.
                         max = doubleABS(tmpInput[i + 1][k + 1] - tmpInput[i + m][k + n]);
                 }
             }
@@ -2166,15 +2166,15 @@ void usaImage(){
     free2D_double(tmpOutput, m_outH);
     displayImage();
 }
-// Â÷ ¿¬»êÀÚ
+// ì°¨ ì—°ì‚°ì
 void minusImage() {
-    // ±âÁ¸ Ãâ·Â ¸Ş¸ğ¸® ÇØÁ¦
+    // ê¸°ì¡´ ì¶œë ¥ ë©”ëª¨ë¦¬ í•´ì œ
     free2D(m_OutImage, m_outH);
     m_outH = m_inH;
     m_outW = m_inW;
     m_OutImage = malloc2D(m_outH, m_outW);
-    // ÀÓ½Ã ÀÔ·Â/Ãâ·Â ¸Ş¸ğ¸® ÁØºñ
-    double** tmpInput = malloc2D_double(m_inH + 2, m_inW + 2); //¿§Áö±¸°£ ¸¶½ºÅ·À» °£´ÜÇÏ°Ô ÇÏ±âÀ§ÇØ.(³Ğ¾îÁø ¿µ¿ªµéÀº »èÁ¦µÉ ¿¹Á¤)
+    // ì„ì‹œ ì…ë ¥/ì¶œë ¥ ë©”ëª¨ë¦¬ ì¤€ë¹„
+    double** tmpInput = malloc2D_double(m_inH + 2, m_inW + 2); //ì—£ì§€êµ¬ê°„ ë§ˆìŠ¤í‚¹ì„ ê°„ë‹¨í•˜ê²Œ í•˜ê¸°ìœ„í•´.(ë„“ì–´ì§„ ì˜ì—­ë“¤ì€ ì‚­ì œë  ì˜ˆì •)
     double** tmpOutput = malloc2D_double(m_outH, m_outW);
     for (int i = 0; i < m_inH; i++) {
         for (int k = 0; k < m_inW; k++) {
@@ -2182,16 +2182,16 @@ void minusImage() {
         }
     }
 
-    // ÁøÂ¥ ¿µ»ó Ã³¸® ¾Ë°í¸®Áò ==> È¸¼±¿¬»ê
-    double max = 0.0; // ºí·ÏÀÌ ÀÌµ¿ÇÒ ¶§ ¸¶´Ù ÃÖ´ë°ª
-    double mask[4] = {0,};
+    // ì§„ì§œ ì˜ìƒ ì²˜ë¦¬ ì•Œê³ ë¦¬ì¦˜ ==> íšŒì„ ì—°ì‚°
+    double max = 0.0; // ë¸”ë¡ì´ ì´ë™í•  ë•Œ ë§ˆë‹¤ ìµœëŒ€ê°’
+    double mask[4] = { 0, };
     for (int i = 0; i < m_inH; i++) {
         for (int k = 0; k < m_inW; k++) {
-            max = 0.0; // ÃÖ´ë°ª ÃÊ±âÈ­
+            max = 0.0; // ìµœëŒ€ê°’ ì´ˆê¸°í™”
             mask[0] = doubleABS(tmpInput[i][k] - tmpInput[i + 2][k + 2]);
-            mask[1] = doubleABS(tmpInput[i][k+1] - tmpInput[i + 2][k + 1]);          
-            mask[2] = doubleABS(tmpInput[i][k+2] - tmpInput[i + 2][k]);
-            mask[3] = doubleABS(tmpInput[i+1][k] - tmpInput[i + 1][k + 2]);
+            mask[1] = doubleABS(tmpInput[i][k + 1] - tmpInput[i + 2][k + 1]);
+            mask[2] = doubleABS(tmpInput[i][k + 2] - tmpInput[i + 2][k]);
+            mask[3] = doubleABS(tmpInput[i + 1][k] - tmpInput[i + 1][k + 2]);
             for (int m = 0; m < 4; m++) {
                 if (mask[m] >= max) max = mask[m];
             }
@@ -2211,12 +2211,12 @@ void minusImage() {
     free2D_double(tmpOutput, m_outH);
     displayImage();
 }
-// ¿µ»ó È®´ë, ¾ç¼±Çü º¸°£¹ı
+// ì˜ìƒ í™•ëŒ€, ì–‘ì„ í˜• ë³´ê°„ë²•
 void zoomInYSImage() {
-    // ±âÁ¸ Ãâ·Â ¸Ş¸ğ¸® ÇØÁ¦
+    // ê¸°ì¡´ ì¶œë ¥ ë©”ëª¨ë¦¬ í•´ì œ
     free2D(m_OutImage, m_outH);
     double scale = 0.0;
-    printf("¿øÇÏ´Â È®´ë¹èÀ² :"); scanf("%lf", &scale);
+    printf("ì›í•˜ëŠ” í™•ëŒ€ë°°ìœ¨ :"); scanf("%lf", &scale);
     m_outH = m_inH * scale;
     m_outW = m_inW * scale;
     double** tempImage = malloc2D_double(m_inH, m_inW);
@@ -2234,26 +2234,26 @@ void zoomInYSImage() {
     int v = 0;
     for (int i = 0; i < m_outH; i++) {
         for (int k = 0; k < m_outW; k++) {
-            r_H = i / scale;
-            r_W = k / scale;
+            r_H = i / scale; 
+            r_W = k / scale;  
 
-            i_H = (int)floor(r_H); // ³»¸². celi = ¿Ã¸²
-            i_W = (int)floor(r_W);
+            i_H = (int)floor(r_H); //  ë‚´ë¦¼. celi = ì˜¬ë¦¼
+            i_W = (int)floor(r_W); 
 
-            s_H = r_H - i_H;
-            s_W = r_W - i_W;
+            s_H = r_H - i_H; 
+            s_W = r_W - i_W; 
 
             if (i_H < 0 || i_H >= (m_inH - 1) || i_W < 0 || i_W >= (m_inW - 1)) {
-                    m_OutImage[i][k] = 255;
+                m_OutImage[i][k] = 255;
             }
             else
             {
-                C1 = (double)tempImage[i_H][i_W];
-                C2 = (double)tempImage[i_H][i_W+1];
-                C3 = (double)tempImage[i_H+1][i_W+1];
-                C4 = (double)tempImage[i_H+1][i_W];
+                C1 = (double)tempImage[i_H][i_W];           // A
+                C2 = (double)tempImage[i_H][i_W + 1];       // B
+                C3 = (double)tempImage[i_H + 1][i_W + 1];   // C
+                C4 = (double)tempImage[i_H + 1][i_W];       // D
             }
-            v = (UC)(C1 * (1 - s_H) * (1 - s_W) + C2 * s_W * (1 - s_H) 
+            v = (UC)(C1 * (1 - s_H) * (1 - s_W) + C2 * s_W * (1 - s_H)
                 + C3 * s_W * s_H + C4 * (1 - s_W) * s_H);
             m_OutImage[i][k] = v;
         }
@@ -2261,40 +2261,40 @@ void zoomInYSImage() {
     free2D_double(tempImage, m_inH);
     displayImage();
 }
-// ¿µ»ó È¸Àü ¾ç¼±Çü º¸°£¹ı : ¹Ì¿Ï¼º
-void rotateYSImage() {// ¿µ»ó È¸Àü ¾Ë°í¸®Áò. Áß¾ÓÈ¸Àü+¹é¿öµù+È®´ë
+// ì˜ìƒ íšŒì „ ì–‘ì„ í˜• ë³´ê°„ë²• : ë¯¸ì™„ì„±
+void rotateYSImage() {// ì˜ìƒ íšŒì „ ì•Œê³ ë¦¬ì¦˜. ì¤‘ì•™íšŒì „+ë°±ì›Œë”©+í™•ëŒ€
 
-    // ±âÁ¸ Ãâ·Â ¸Ş¸ğ¸® ÇØÁ¦
-    free2D(m_OutImage, m_outH); // ÇØÁ¦°¡ À§¿¡ ¿À´Â ÀÌÀ¯´Â Ãâ·Â width,height°¡ ÀÔ·Â°ú ´Ù¸¦ ¼ö ÀÖ±â ¶§¹®¿¡ Æø³ĞÀÌ °áÁ¤Àü¿¡ ÇØ¾ßÇÑ´Ù.
+    // ê¸°ì¡´ ì¶œë ¥ ë©”ëª¨ë¦¬ í•´ì œ
+    free2D(m_OutImage, m_outH); // í•´ì œê°€ ìœ„ì— ì˜¤ëŠ” ì´ìœ ëŠ” ì¶œë ¥ width,heightê°€ ì…ë ¥ê³¼ ë‹¤ë¥¼ ìˆ˜ ìˆê¸° ë•Œë¬¸ì— í­ë„“ì´ ê²°ì •ì „ì— í•´ì•¼í•œë‹¤.
 
 
-    // ÁøÂ¥ ¿µ»óÃ³¸® ¾Ë°í¸®Áò
+    // ì§„ì§œ ì˜ìƒì²˜ë¦¬ ì•Œê³ ë¦¬ì¦˜
 
-    int angle; // 0~ 360 ÀÎµ¥ ÄÄÇ»ÅÍ´Â radianÀ¸·Î ÀÎ½Ä µû¶ó¼­ º¯È¯ÇØÁÖ¾î¾ßÇÔ
-    printf("ÀÌµ¿ °¢µµ Å©±â ÀÔ·Â:\n  ");
+    int angle; // 0~ 360 ì¸ë° ì»´í“¨í„°ëŠ” radianìœ¼ë¡œ ì¸ì‹ ë”°ë¼ì„œ ë³€í™˜í•´ì£¼ì–´ì•¼í•¨
+    printf("ì´ë™ ê°ë„ í¬ê¸° ì…ë ¥:\n  ");
     scanf("%d", &angle);
 
 
 
     double radian = (angle * 3.141592) / 180.0;
-    double radian90 = ((90 - angle) * 3.141592) / 180.0;  // 90µµ ³Ñ´Â °¢À» ¾î¶»°Ô °è»êÇÒÁö »ı°¢
-    // newX = cos * x - sin * y  ¿µ»ó È¸Àü °ø½Ä x = i , y = k
+    double radian90 = ((90 - angle) * 3.141592) / 180.0;  // 90ë„ ë„˜ëŠ” ê°ì„ ì–´ë–»ê²Œ ê³„ì‚°í• ì§€ ìƒê°
+    // newX = cos * x - sin * y  ì˜ìƒ íšŒì „ ê³µì‹ x = i , y = k
     // newY = sin * x + cos * y
 
 
 
-    //(Áß¿ä!) Ãâ·Â ¿µ»óÀÇ ³ôÀÌ¿Í ÆøÀ» °áÁ¤ÇØ¾ßÇÑ´Ù --> ¾Ë°í¸®Áò¿¡ µû¶ó ´Ş¶óÁ®¾ßÇÔ
+    //(ì¤‘ìš”!) ì¶œë ¥ ì˜ìƒì˜ ë†’ì´ì™€ í­ì„ ê²°ì •í•´ì•¼í•œë‹¤ --> ì•Œê³ ë¦¬ì¦˜ì— ë”°ë¼ ë‹¬ë¼ì ¸ì•¼í•¨
 
-    m_outH = (int)(m_inH * fabs(cos(radian90)) + m_inW * fabs(cos(radian)));     // È®´ë¸¦ À§ÇØ ÀÔ·Â¹ŞÀº µÚ »ó Ãâ·Â Æø ³ĞÀÌ Á¤ÇØ¾ß ÇØ¼­ À§Ä¡¸¦ ¾Æ·¡·Î
-    m_outW = (int)(m_inW * fabs(cos(radian)) + m_inW * fabs(cos(radian90)));   // ½Ç¼öÇüÀ» Á¤¼ö·Î ¹Ù…f´Ù. ½Ç¼ö°¡ ³ª¿Ã ¼ö ÀÖ±â ¶§¹®  
-                                                                                 // cos°ªÀÌ À½¼öµÉ ¼ö ÀÖ±â ‹š¹®¿¡ fabs·Î ½Ç¼öÀÏ¶§ Àı´ë°ª ÃëÇØÁÜ
-    // Ãâ·Â ¿µ»ó ¸Ş¸ğ¸® ÇÒ´ç
+    m_outH = (int)(m_inH * fabs(cos(radian90)) + m_inW * fabs(cos(radian)));     // í™•ëŒ€ë¥¼ ìœ„í•´ ì…ë ¥ë°›ì€ ë’¤ ìƒ ì¶œë ¥ í­ ë„“ì´ ì •í•´ì•¼ í•´ì„œ ìœ„ì¹˜ë¥¼ ì•„ë˜ë¡œ
+    m_outW = (int)(m_inW * fabs(cos(radian)) + m_inW * fabs(cos(radian90)));   // ì‹¤ìˆ˜í˜•ì„ ì •ìˆ˜ë¡œ ë°”ê¿§ë‹¤. ì‹¤ìˆ˜ê°€ ë‚˜ì˜¬ ìˆ˜ ìˆê¸° ë•Œë¬¸  
+                                                                                 // cosê°’ì´ ìŒìˆ˜ë  ìˆ˜ ìˆê¸° ë–„ë¬¸ì— fabsë¡œ ì‹¤ìˆ˜ì¼ë•Œ ì ˆëŒ€ê°’ ì·¨í•´ì¤Œ
+    // ì¶œë ¥ ì˜ìƒ ë©”ëª¨ë¦¬ í• ë‹¹
 
     m_OutImage = malloc2D(m_outH, m_outW);
 
-    // ÀÓ½Ã ÀÔ·Â ¿µ»ó -----> Ãâ·Â°ú Å©±â°¡ °°°Ô ÇÏ°í , ÀÔ·Â ¿µ»ó¿¡ µÎ±â
+    // ì„ì‹œ ì…ë ¥ ì˜ìƒ -----> ì¶œë ¥ê³¼ í¬ê¸°ê°€ ê°™ê²Œ í•˜ê³  , ì…ë ¥ ì˜ìƒì— ë‘ê¸°
 
-    UC** tmpInput = malloc2D(m_outH, m_outW); // ÀÓ½Ã ÀÔ·Â ¿µ»ó ¸Ş¸ğ¸® ÇÒ´ç (Ãâ·ÂÅ©±â·Î ÇÒ´ç) 
+    UC** tmpInput = malloc2D(m_outH, m_outW); // ì„ì‹œ ì…ë ¥ ì˜ìƒ ë©”ëª¨ë¦¬ í• ë‹¹ (ì¶œë ¥í¬ê¸°ë¡œ í• ë‹¹) 
 
 
     int dx = (m_outW - m_inW) / 2;
@@ -2303,30 +2303,30 @@ void rotateYSImage() {// ¿µ»ó È¸Àü ¾Ë°í¸®Áò. Áß¾ÓÈ¸Àü+¹é¿öµù+È®´ë
     for (int i = 0; i < m_inH; i++) {
         for (int k = 0; k < m_inW; k++) {
 
-            tmpInput[i + dy][k + dx] = m_InImage[i][k]; // ¿øº»¿µ»óÀ» tmpInput¿¡ ±×´ë·Î ÀúÀåÇÏ´Âµ¥ tmpInputÀº (0,0) ÁÂÇ¥¿¡¼­ Áß¾ÓÀ¸·Î ÀÌµ¿½ÃÅ´(dy,dx)
+            tmpInput[i + dy][k + dx] = m_InImage[i][k]; // ì›ë³¸ì˜ìƒì„ tmpInputì— ê·¸ëŒ€ë¡œ ì €ì¥í•˜ëŠ”ë° tmpInputì€ (0,0) ì¢Œí‘œì—ì„œ ì¤‘ì•™ìœ¼ë¡œ ì´ë™ì‹œí‚´(dy,dx)
             m_OutImage[i][k] = 0;
         }
     }
 
 
-    // Áß¾Ó À§Ä¡ ±¸ÇÏ±â
-    int centerx = m_outW / 2; //È¸Àü »çÁøÀÇ Áß¾Ó
+    // ì¤‘ì•™ ìœ„ì¹˜ êµ¬í•˜ê¸°
+    int centerx = m_outW / 2; //íšŒì „ ì‚¬ì§„ì˜ ì¤‘ì•™
     int centery = m_outH / 2;
 
     int x1, x2, y1, y2;
     double rx, ry, p, q, value;
 
 
-    //for (int i = 0; i < m_outH; i++) { // ¹é¿öµù, ¿ª¹æÇâ »ç»ó : Ãâ·Â ±âÁØÀ¸·Î for¹® µ¹·Á¾ßÇÔ
+    //for (int i = 0; i < m_outH; i++) { // ë°±ì›Œë”©, ì—­ë°©í–¥ ì‚¬ìƒ : ì¶œë ¥ ê¸°ì¤€ìœ¼ë¡œ forë¬¸ ëŒë ¤ì•¼í•¨
     //	for (int k = 0; k < m_outW; k++) {
 
-    //		int oldI = (cos(radian) * (i - centerx) + sin(radian) * (k - centery)) + centery;  // Áß¾Ó±âÁØ È¸ÀüÀ» À§ÇØ ¸¸µç °ø½Ä , ¹é¿öµù±âÁØÀ¸·Î ¹Ù²Ş ºÎÈ£µµ
+    //		int oldI = (cos(radian) * (i - centerx) + sin(radian) * (k - centery)) + centery;  // ì¤‘ì•™ê¸°ì¤€ íšŒì „ì„ ìœ„í•´ ë§Œë“  ê³µì‹ , ë°±ì›Œë”©ê¸°ì¤€ìœ¼ë¡œ ë°”ê¿ˆ ë¶€í˜¸ë„
     //		int oldK = (-sin(radian) * (i - centerx) + cos(radian) * (k - centery)) + centerx;
 
     //		if (((0 <= oldI) && (oldI < m_outH)) && ((0 <= oldK) && (oldK < m_outW))) {
 
 
-    //			tmpOutput[i][k] = tmpInput[oldI][oldK] ;   // Áß¾Ó¿¡ ³õÀº tmpInputÀ» µ¹·ÁÁØ´Ù. 
+    //			tmpOutput[i][k] = tmpInput[oldI][oldK] ;   // ì¤‘ì•™ì— ë†“ì€ tmpInputì„ ëŒë ¤ì¤€ë‹¤. 
 
 
     //		}
@@ -2339,12 +2339,12 @@ void rotateYSImage() {// ¿µ»ó È¸Àü ¾Ë°í¸®Áò. Áß¾ÓÈ¸Àü+¹é¿öµù+È®´ë
     for (int i = 0; i < m_outH; i++) {
         for (int k = 0; k < m_outW; k++) {
 
-            // ½Ç¼öÇü º¯¼ö rx, ry´Â ÀÔ·Â ¿µ»ó¿¡¼­ ÂüÁ¶ÇÒ ÇÈ¼¿ °ªÀÇ ½Ç¼ö ÁÂÇ¥ 
+            // ì‹¤ìˆ˜í˜• ë³€ìˆ˜ rx, ryëŠ” ì…ë ¥ ì˜ìƒì—ì„œ ì°¸ì¡°í•  í”½ì…€ ê°’ì˜ ì‹¤ìˆ˜ ì¢Œí‘œ 
             rx = (double)(-sin(radian)) * (i - centerx) + cos(radian) * (k - centery) + centerx;
             ry = (double)(cos(radian)) * (i - centerx) + sin(radian) * (k - centery) + centery;
 
             if (0 <= rx && rx < m_outW && 0 <= ry && ry < m_outH) {
-                // x1, x2, y1, y2´Â °¢°¢(rx, ry) ÁÂÇ¥¸¦ µÑ·¯½Ñ 4°³ÀÇ ÇÈ¼¿ ÁÂÇ¥¸¦ ³ªÅ¸³½´Ù.
+                // x1, x2, y1, y2ëŠ” ê°ê°(rx, ry) ì¢Œí‘œë¥¼ ë‘˜ëŸ¬ì‹¼ 4ê°œì˜ í”½ì…€ ì¢Œí‘œë¥¼ ë‚˜íƒ€ë‚¸ë‹¤.
                 x1 = (int)rx;
                 y1 = (int)ry;
 
@@ -2357,7 +2357,7 @@ void rotateYSImage() {// ¿µ»ó È¸Àü ¾Ë°í¸®Áò. Áß¾ÓÈ¸Àü+¹é¿öµù+È®´ë
                 if (y2 == m_outH) {
                     y2 = m_outH - 1;
                 }
-                // p¿Í q´Â 0ºÎÅÍ 1 »çÀÌÀÇ °ªÀ» °®´Â ½Ç¼öÇü º¯¼ö 
+                // pì™€ qëŠ” 0ë¶€í„° 1 ì‚¬ì´ì˜ ê°’ì„ ê°–ëŠ” ì‹¤ìˆ˜í˜• ë³€ìˆ˜ 
                 p = rx - x1;
                 q = ry - y1;
 
@@ -2379,38 +2379,38 @@ void rotateYSImage() {// ¿µ»ó È¸Àü ¾Ë°í¸®Áò. Áß¾ÓÈ¸Àü+¹é¿öµù+È®´ë
         }
     }
 
-    free2D(tmpInput, m_outH); // ÀÓ½Ã ÀÔ·Â ¿µ»ó ¸Ş¸ğ¸® ÇØÁà¾ß RAM ´©¼ö ¾ÈÀÏ¾î³²
+    free2D(tmpInput, m_outH); // ì„ì‹œ ì…ë ¥ ì˜ìƒ ë©”ëª¨ë¦¬ í•´ì¤˜ì•¼ RAM ëˆ„ìˆ˜ ì•ˆì¼ì–´ë‚¨
     displayImage();
 
 }
 
-///È÷½ºÅä±×·¥
-// È÷½ºÅä±×·¥ Ãâ·Â
+///íˆìŠ¤í† ê·¸ë¨
+// íˆìŠ¤í† ê·¸ë¨ ì¶œë ¥
 void histImage() {
-    // ±âÁ¸ Ãâ·Â ¸Ş¸ğ¸® ÇØÁ¦
+    // ê¸°ì¡´ ì¶œë ¥ ë©”ëª¨ë¦¬ í•´ì œ
     free2D(m_OutImage, m_outH);
     m_outH = 256;
     m_outW = 256;
     int reSize = m_outH * m_outW;
-    UC hist[256]; // È÷½ºÅä±×·¥ Çà·Ä
+    UC hist[256]; // íˆìŠ¤í† ê·¸ë¨ í–‰ë ¬
     int LOW = 0;
     int HIGH = 255;
     UC value = 0;
 
-    //ÃÊ±âÈ­
+    //ì´ˆê¸°í™”
     for (int i = 0; i < 256; i++) {
         hist[i] = 0;
     }
-    //ºóµµ¼ö Á¶»ç
+    //ë¹ˆë„ìˆ˜ ì¡°ì‚¬
     for (int i = 0; i < m_inH; i++) {
         for (int k = 0; k < m_inW; k++) {
             value = m_InImage[i][k];
             hist[value]++;
         }
     }
-    // Á¤±ÔÈ­
-    UC min = 0;// ÃÖ¼Ò°ª ÃÊ±âÈ­
-    UC max = 0; // ÃÖ´ë°ª ÃÊ±âÈ­
+    // ì •ê·œí™”
+    UC min = 0;// ìµœì†Œê°’ ì´ˆê¸°í™”
+    UC max = 0; // ìµœëŒ€ê°’ ì´ˆê¸°í™”
     UC dif;
     int hNum = 0;
     for (int i = 0; i < 256; i++) {
@@ -2419,13 +2419,13 @@ void histImage() {
     }
     dif = max - min;
     UC scaleHist[256];
-    // Á¤±ÔÈ­ µÈ È÷½ºÅä±×·¥
+    // ì •ê·œí™” ëœ íˆìŠ¤í† ê·¸ë¨
     for (int i = 0; i < 256; i++) {
         scaleHist[i] = (UC)((hist[i] - min) * HIGH / dif);
     }
-    // Á¤±ÔÈ­µÈ È÷½ºÅä±×·¥ Ãâ·Â
+    // ì •ê·œí™”ëœ íˆìŠ¤í† ê·¸ë¨ ì¶œë ¥
     UC* OutImage = (UC*)malloc((reSize) * sizeof(UC));
-    // Á¤±ÔÈ­µÈÈ÷½ºÅä±×·¥ÀÇ°ªÀºÃâ·Â¹è¿­¿¡°ËÀºÁ¡(0)À¸·ÎÇ¥Çö
+    // ì •ê·œí™”ëœíˆìŠ¤í† ê·¸ë¨ì˜ê°’ì€ì¶œë ¥ë°°ì—´ì—ê²€ì€ì (0)ìœ¼ë¡œí‘œí˜„
     for (int i = 0; i < m_outH; i++) {
         for (int k = 0; k < scaleHist[i]; k++) {
             OutImage[m_outW * (m_outH - k - 1) + i] = 0;
@@ -2442,25 +2442,25 @@ void histImage() {
     free(OutImage);
     displayImage();
 }
-//½ºÆ®·¹Äª : ÄÜ½ºÆ®¶óÆ®°¡ ³·Àº ÀÌ¹ÌÁö¸¦ ¼±¸íÇÏ°Ô ÇØÁØ´Ù.
+//ìŠ¤íŠ¸ë ˆì¹­ : ì½˜ìŠ¤íŠ¸ë¼íŠ¸ê°€ ë‚®ì€ ì´ë¯¸ì§€ë¥¼ ì„ ëª…í•˜ê²Œ í•´ì¤€ë‹¤.
 void histStretchImage() {
-    // ±âÁ¸ Ãâ·Â ¸Ş¸ğ¸® ÇØÁ¦
+    // ê¸°ì¡´ ì¶œë ¥ ë©”ëª¨ë¦¬ í•´ì œ
     free2D(m_OutImage, m_outH);
     m_outH = m_inH;
     m_outW = m_inW;
     int LOW = 0;
     int HIGH = 255;
-    UC min = (UC)HIGH;// ÃÖ¼Ò°ª ÃÊ±âÈ­
-    UC max = (UC)LOW; // ÃÖ´ë°ª ÃÊ±âÈ­
-    
-    //ÀÔ·Â ¿µ»óÀÇ ÃÖ¼Ò°ª Ã£±â
+    UC min = (UC)HIGH;// ìµœì†Œê°’ ì´ˆê¸°í™”
+    UC max = (UC)LOW; // ìµœëŒ€ê°’ ì´ˆê¸°í™”
+
+    //ì…ë ¥ ì˜ìƒì˜ ìµœì†Œê°’ ì°¾ê¸°
     for (int i = 0; i < m_inH; i++) {
         for (int k = 0; k < m_inW; k++) {
-            if(m_InImage[i][k] <= min) 
+            if (m_InImage[i][k] <= min)
                 min = m_InImage[i][k];
         }
     }
-    //ÀÔ·Â ¿µ»óÀÇ ÃÖ´ë°ª Ã£±â
+    //ì…ë ¥ ì˜ìƒì˜ ìµœëŒ€ê°’ ì°¾ê¸°
     for (int i = 0; i < m_inH; i++) {
         for (int k = 0; k < m_inW; k++) {
             if (m_InImage[i][k] >= max)
@@ -2470,16 +2470,16 @@ void histStretchImage() {
     m_OutImage = malloc2D(m_outH, m_outW);
     for (int i = 0; i < m_outH; i++) {
         for (int k = 0; k < m_outW; k++) {
-            m_OutImage[i][k] = (UC)(m_InImage[i][k]-min)*HIGH/(max-min);
+            m_OutImage[i][k] = (UC)(m_InImage[i][k] - min) * HIGH / (max - min);
         }
     }
     displayImage();
 }
-//ÆòÈ°È­ : ÄÜ½ºÆ®¶óÆ®ÀÇ ¹ë·±½º°¡ ¸Â¾ÆÁø´Ù.
-// ÆòÈ°È­´Â È÷½ºÅä±×·¥ ¸·´ëÀÇ ³ôÀÌ¸¦ ±ÕÀÏÇÏ°ÔÇÏ´Â°Í.
-// != ½ºÆ®·¹ÄªÀº È÷½ºÅä±×¸² ¸·´ëÀÇ ³ôÀÌ´Â µ¿ÀÏÇÏ¸ç ³Ğ°Ô ÆîÄ¡´Â°Í.
+//í‰í™œí™” : ì½˜ìŠ¤íŠ¸ë¼íŠ¸ì˜ ë°¸ëŸ°ìŠ¤ê°€ ë§ì•„ì§„ë‹¤.
+// í‰í™œí™”ëŠ” íˆìŠ¤í† ê·¸ë¨ ë§‰ëŒ€ì˜ ë†’ì´ë¥¼ ê· ì¼í•˜ê²Œí•˜ëŠ”ê²ƒ.
+// != ìŠ¤íŠ¸ë ˆì¹­ì€ íˆìŠ¤í† ê·¸ë¦¼ ë§‰ëŒ€ì˜ ë†’ì´ëŠ” ë™ì¼í•˜ë©° ë„“ê²Œ í¼ì¹˜ëŠ”ê²ƒ.
 void histEqualizeImage() {
-    // ±âÁ¸ Ãâ·Â ¸Ş¸ğ¸® ÇØÁ¦
+    // ê¸°ì¡´ ì¶œë ¥ ë©”ëª¨ë¦¬ í•´ì œ
     free2D(m_OutImage, m_outH);
     m_outH = m_inH;
     m_outW = m_inW;
@@ -2495,24 +2495,24 @@ void histEqualizeImage() {
     LOW = 0;
     HIGH = 255;
 
-    // ÃÊ±âÈ­
+    // ì´ˆê¸°í™”
     for (int i = 0; i < 256; i++)
         m_HIST[i] = LOW;
-    // ºóµµ¼öÁ¶»ç
+    // ë¹ˆë„ìˆ˜ì¡°ì‚¬
     for (int i = 0; i < m_inH; i++) {
         for (int k = 0; k < m_inW; k++) {
             value = m_InImage[i][k];
             m_HIST[value]++;
         }
     }
-    // ´©ÀûÈ÷½ºÅä±×·¥»ı¼º
+    // ëˆ„ì íˆìŠ¤í† ê·¸ë¨ìƒì„±
     for (int i = 0; i < 256; i++) {
         SUM += m_HIST[i];
         m_Sum_of_HIST[i] = SUM;
     }
 
-    m_OutImage = malloc2D(m_outH,m_outW);
-    // ÀÔ·Â¿µ»óÀ»ÆòÈ°È­µÈ¿µ»óÀ¸·ÎÃâ·Â
+    m_OutImage = malloc2D(m_outH, m_outW);
+    // ì…ë ¥ì˜ìƒì„í‰í™œí™”ëœì˜ìƒìœ¼ë¡œì¶œë ¥
     for (int i = 0; i < m_outH; i++) {
         for (int k = 0; k < m_outW; k++) {
             Temp = m_InImage[i][k];
