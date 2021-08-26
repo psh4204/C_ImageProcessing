@@ -24,10 +24,13 @@ UC** m_InImage = NULL;     // Input_Image : 입력 이미지(이미지초기값)
 UC** m_OutImage = NULL;     // Output_Image : 출력 이미지
 int m_inH, m_inW, m_outH, m_outW; // 이미지 높이, 너비
 int menuInput = 0;
+float version = 1.0; // 버전 입력
+
 // 함수 선언부 (공통)
 UC** malloc2D(int, int);    void free2D(UC**, int);
 void openImage();           void saveImage();
 void displayImage();
+
 // 함수 선언부 (영상처리)
 void equalImage();
 void pmLightImage();        void mdLightImage();
@@ -65,7 +68,7 @@ void printMenu() {
     else if (menuInput < 0) {
         menuInput = endPage;
     }
-    puts(" \n [2021.08.25] ImageProcessing(1.0)_박시환\n");
+    printf(" \n   ImageProcessing(Version %.1f)_박시환\n", version);
     puts("-------------------------------------------------\n");
     puts("   [0.이미지열기] [1.저장] [2.원본] [3.종료]\n");
     printf("---------------------[%d / %d]----------------------\n", menuInput, endPage);
