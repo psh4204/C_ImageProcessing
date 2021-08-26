@@ -71,7 +71,7 @@ void printMenu() {
     printf(" \n   ImageProcessing(Version %.1f)_박시환\n", version);
     puts("-------------------------------------------------\n");
     puts("   [0.이미지열기] [1.저장] [2.원본] [3.종료]\n");
-    printf("---------------------[%d / %d]----------------------\n", menuInput, endPage);
+    printf("---------------------[%d / %d]----------------------\n", menuInput+1, endPage+1);
     switch (menuInput) {
     case 0:
         puts("   [화소점처리]\n");
@@ -479,7 +479,7 @@ void orCircleImage() { // 흑백 원과 OR연산을 하는 함수이다.
             circOut[i][k] = circ[i / scale][k / scale];
         }
     }
-    // AND연산 :: 주의! 비트연산자는 우선순위가 낮기때문에 괄호처리 매우 중요
+    // OR연산 :: 주의! 비트연산자는 우선순위가 낮기때문에 괄호처리 매우 중요
     for (int i = 0; i < m_inH; i++) {
         for (int k = 0; k < m_inW; k++) {
             if ((m_InImage[i][k] | circOut[i][k]) >= 255)  m_OutImage[i][k] = 255;
@@ -560,7 +560,7 @@ void gammaImage() {
     for (int i = 0; i < m_inH; i++) {
         for (int k = 0; k < m_inW; k++) {
             double m = m_InImage[i][k];
-            m_OutImage[i][k] = (unsigned int)255.0 * pow(m / 255.0, gamma);
+            m_OutImage[i][k] = (unsigned int)255.0 * pow(m / 255.0, gamma); // pow(a,b) ; a의 b 제곱
         }
     }
     displayImage();
@@ -571,16 +571,32 @@ void paraImage() {
     free2D(m_OutImage, m_outH);
     m_outH = m_inH; m_outW = m_inW;
     m_OutImage = malloc2D(m_outH, m_outW);
+    int input = 0;
+    printf("(1)CAP (2) CUP\n"); input = _getch();
+    double value = 0.0;
 
-    char input = 0;
-    for (int i = 0; i < m_outH; i++) {
-        for (int k = 0; k < m_outW; k++) {
-            //pow()// 거듭제곱 : x의 y제곱
-            double value = 255.0 - 255.0 * pow((m_InImage[i][k] / 128.0 - 1.0), 2); //밝은곳 입체형
-            if (value > 255.0) value = 255.0;
-            else if (value < 0.0) value = 0.0;
+    if (input == '1') {
+        for (int i = 0; i < m_outH; i++) {
+            for (int k = 0; k < m_outW; k++) {
+                //pow()// 거듭제곱 : x의 y제곱
+                double value = 255.0 - 255.0 * pow((m_InImage[i][k] / 128.0 - 1.0), 2); //밝은 곳 입체형 (CAP)
+                if (value > 255.0) value = 255.0;
+                else if (value < 0.0) value = 0.0;
 
-            m_OutImage[i][k] = (UC)value;
+                m_OutImage[i][k] = (UC)value;
+            }
+        }
+    }
+    else {
+        for (int i = 0; i < m_outH; i++) {
+            for (int k = 0; k < m_outW; k++) {
+                //pow()// 거듭제곱 : x의 y제곱
+                double value = 255.0 * pow((m_InImage[i][k] / 128.0 - 1.0), 2); //어두운 곳 입체형 (CUP)
+                if (value > 255.0) value = 255.0;
+                else if (value < 0.0) value = 0.0;
+
+                m_OutImage[i][k] = (UC)value;
+            }
         }
     }
     displayImage();
