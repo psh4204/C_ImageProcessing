@@ -110,8 +110,8 @@ void printMenu() {
         break;
     case 4:
         puts("   [히스토그램처리]\n");
-        puts("(A.스트레칭)\t(B.히스토그램)\n");
-        puts("(C.평활화)\n");
+        puts("(A.히스토그램표시)\n");
+        puts("(B.스트레칭)\t(C.평활화)\n");
         break;
     }
     puts("-------------------------------------------------\n");
@@ -241,24 +241,9 @@ int main() {
             case '2':equalImage(); break;
             case '3': free2D(m_InImage, m_inH); free2D(m_OutImage, m_outH); return 0;
 
-            case 'a': case'A': histStretchImage(); break;
-            case 'b': case'B': histImage(); break; 
+            case 'a': case'A': histImage(); break;
+            case 'b': case'B': histStretchImage(); break;
             case 'c': case'C': histEqualizeImage(); break;
-            /*case 'd': case'D': robertsHEdgeImage(); break;
-            case 'e': case'E': robertsEdgeImage(); break;
-            case 'f': case'F': prwVEdgeImage(); break;
-            case 'g': case'G': prwHEdgeImage(); break;
-            case 'h': case'H': prwEdgeImage(); break;
-            case 'i': case'I': sobelVEdgeImage(); break;
-            case 'j': case'J': sobelHEdgeImage(); break;
-            case 'k': case'K': sobelEdgeImage(); break;
-            case 'l': case'L': lapla4EdgeImage(); break;
-            case 'm': case'M': laplam8EdgeImage(); break;
-            case 'n': case'N': lapla8EdgeImage(); break;
-            case 'o': case'O': logEdgeImage(); break;
-            case 'v': case'V': dogEdgeImage(); break;
-            case 'q': case'Q': usaImage(); break;
-            case 'r': case'R': minusImage(); break;*/
 
 
             default:
@@ -789,7 +774,7 @@ void moveImage() { //이동 이미지 함수
     for (int i = input; i < m_inH; i++) {
         for (int k = input; k < m_inW; k++) {
 
-            m_OutImage[i][k] = m_InImage[i][k];
+            m_OutImage[i][k] = m_InImage[i-input][k-input];
         }
     }
     displayImage();
@@ -2239,7 +2224,7 @@ void zoomInYSImage() {
             s_H = r_H - i_H;
             s_W = r_W - i_W;
 
-            if (i_H < 0 || i_H >= (m_outH - 1) || i_W < 0 || i_W >= (m_outW - 1)) {
+            if (i_H < 0 || i_H >= (m_inH - 1) || i_W < 0 || i_W >= (m_inW - 1)) {
                     m_OutImage[i][k] = 255;
             }
             else
@@ -2381,6 +2366,63 @@ void rotateYSImage() {// 영상 회전 알고리즘. 중앙회전+백워딩+확대
 }
 
 ///히스토그램
+// 히스토그램 출력
+void histImage() {
+    // 기존 출력 메모리 해제
+    free2D(m_OutImage, m_outH);
+    m_outH = 256;
+    m_outW = 256;
+    int reSize = m_outH * m_outW;
+    UC hist[256]; // 히스토그램 행렬
+    int LOW = 0;
+    int HIGH = 255;
+    UC value = 0;
+
+    //초기화
+    for (int i = 0; i < 256; i++) {
+        hist[i] = 0;
+    }
+    //빈도수 조사
+    for (int i = 0; i < m_inH; i++) {
+        for (int k = 0; k < m_inW; k++) {
+            value = m_InImage[i][k];
+            hist[value]++;
+        }
+    }
+    // 정규화
+    UC min = 0;// 최소값 초기화
+    UC max = 0; // 최대값 초기화
+    UC dif;
+    int hNum = 0;
+    for (int i = 0; i < 256; i++) {
+        if (hist[i] <= min) min = (UC)hist[i];
+        if (hist[i] >= max) max = (UC)hist[i];
+    }
+    dif = max - min;
+    UC scaleHist[256];
+    // 정규화 된 히스토그램
+    for (int i = 0; i < 256; i++) {
+        scaleHist[i] = (UC)((hist[i] - min) * HIGH / dif);
+    }
+    // 정규화된 히스토그램 출력
+    UC* OutImage = (UC*)malloc((reSize) * sizeof(UC));
+    // 정규화된히스토그램의값은출력배열에검은점(0)으로표현
+    for (int i = 0; i < m_outH; i++) {
+        for (int k = 0; k < scaleHist[i]; k++) {
+            OutImage[m_outW * (m_outH - k - 1) + i] = 0;
+        }
+    }
+    hNum = 0;
+    m_OutImage = malloc2D(m_outH, m_outW);
+    for (int i = 0; i < m_outH; i++) {
+        for (int k = 0; k < m_outW; k++) {
+            m_OutImage[i][k] = OutImage[hNum];
+            hNum++;
+        }
+    }
+    free(OutImage);
+    displayImage();
+}
 //스트레칭 : 콘스트라트가 낮은 이미지를 선명하게 해준다.
 void histStretchImage() {
     // 기존 출력 메모리 해제
@@ -2422,96 +2464,42 @@ void histEqualizeImage() {
     free2D(m_OutImage, m_outH);
     m_outH = m_inH;
     m_outW = m_inW;
+
     int i, j, vmax, vmin;
-    int m_HistoArr[256];
+    double m_HIST[256];
+    double m_Sum_of_HIST[256];
+    int value;
+    unsigned char LOW, HIGH, Temp;
+    double SUM = 0.0;
 
+    int size = m_inH * m_inW;
+    LOW = 0;
+    HIGH = 255;
 
-    /// histogram연산을 위해 사용할 배열메모리를 할당
-    unsigned int* histogram = new unsigned int[256];
-    unsigned int* sum_hist = new unsigned int[256];
-
-    /// histogram배열을 초기화
-    for (int i = 0; i < 256; i++) histogram[i] = 0;
-
-    /// 영상의 histogram을 계산
-    for (int i = 0; i < m_inH; i++)
-    {
-        for (int j = 0;  j < m_inW; j++) histogram[m_InImage[i][j]]++;
-    }
-
-    /// histogram의 정규화된 합을 계산
-    int sum = 0;
-    float scale_factor = 255.0f / (float)(m_inH * m_inW);
-
-    for (i = 0; i < 256; i++)
-    {
-        sum += histogram[i];
-        sum_hist[i] = (int)((sum * scale_factor) + 0.5);
-    }
-
-    m_OutImage = malloc2D(m_outH, m_outW);
-    /// LUT로써 sum_hist배열을 사용하여 영상을 변환
-    for (int i = 0; i < m_inH; i++) {
-        for (int k = 0; k < m_inW; k++) {
-            m_OutImage[i][k] = m_InImage[i][k];
-        }
-    }
-    displayImage();
-}
-// 히스토그램 출력
-void histImage() {
-    // 기존 출력 메모리 해제
-    free2D(m_OutImage, m_outH);
-    m_outH = 256;
-    m_outW = 256;
-    int reSize = m_outH * m_outW;
-    UC hist[256]; // 히스토그램 행렬
-    int LOW = 0;
-    int HIGH = 255;
-    UC value = 0;
-
-    //초기화
-    for (int i = 0; i < 256; i++) {
-        hist[i] = 0;
-    }
-    //빈도수 조사
+    // 초기화
+    for (int i = 0; i < 256; i++)
+        m_HIST[i] = LOW;
+    // 빈도수조사
     for (int i = 0; i < m_inH; i++) {
         for (int k = 0; k < m_inW; k++) {
             value = m_InImage[i][k];
-            hist[value]++;
+            m_HIST[value]++;
         }
     }
-    // 정규화
-    UC min = 0;// 최소값 초기화
-    UC max = 0; // 최대값 초기화
-    UC dif;
-    int hNum = 0;
+    // 누적히스토그램생성
     for (int i = 0; i < 256; i++) {
-        if (hist[i] <= min) min = (UC)hist[i];
-        if (hist[i] >= max) max = (UC)hist[i];
+        SUM += m_HIST[i];
+        m_Sum_of_HIST[i] = SUM;
     }
-    dif = max - min;
-    UC scaleHist[256];
-    // 정규화 된 히스토그램
-    for (int i = 0; i < 256; i++) {
-        scaleHist[i] = (UC)((hist[i] - min) * HIGH / dif);
-    }
-    // 정규화된 히스토그램 출력
-    UC* OutImage =(UC*) malloc((reSize)*sizeof(UC));
-    // 정규화된히스토그램의값은출력배열에검은점(0)으로표현
-    for (int i = 0; i < m_outH; i++) {
-        for (int k = 0; k < scaleHist[i]; k++) {
-            OutImage[m_outW*(m_outH-k-1)+i] = 0;
-        }
-    }
-    hNum = 0;
-    m_OutImage = malloc2D(m_outH, m_outW);
+
+    m_OutImage = malloc2D(m_outH,m_outW);
+    // 입력영상을평활화된영상으로출력
     for (int i = 0; i < m_outH; i++) {
         for (int k = 0; k < m_outW; k++) {
-            m_OutImage[i][k] = OutImage[hNum];
-            hNum++;
+            Temp = m_InImage[i][k];
+            m_OutImage[i][k] = (UC)(m_Sum_of_HIST[Temp] * HIGH / size);
         }
     }
-    free(OutImage);
+
     displayImage();
 }
